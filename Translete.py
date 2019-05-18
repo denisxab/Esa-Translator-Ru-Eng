@@ -4,6 +4,9 @@ import pyperclip
 import os
 import win32api
 import tkinter.scrolledtext as ScrolledText
+import inspect
+
+import time
 #------------------------------------#
 def test_token(token):
 	respons0 = requests.get('https://translate.yandex.net/api/v1.5/tr.json/translate', params={"key":token,
@@ -58,38 +61,64 @@ def transelte():
 		root1.after(1000, transelte)
 
 def spl():
+
 	def Spelling(text):
 		Chhelk = []
 		if Переключатели.get() == '0':
 			lang = 'en'
 		if Переключатели.get() == '1':
 			lang = 'ru'
-		#-----------------------------------------------------------------#
+
 		texts = text.split(' ')
+
+		text_str=''
+		i= len(texts)
+		io = 0
 		for y in texts:
-			respons_Spelling= requests.get('https://speller.yandex.net/services/spellservice.json/checkText?', params={'text':y,'lang':lang})
-			if respons_Spelling.json() !=[]:
-				Chhelk.append(respons_Spelling.json()[0]['word'])
-				Chhelk.append(respons_Spelling.json()[0]['s'])
-				return Chhelk
+			if i == io+1:
+				text_str+=y
+			else:
+				text_str+=y+' '
+			io+=1
 
-	
+		respons_Spelling= requests.get('https://speller.yandex.net/services/spellservice.json/checkText?', params={'text':text_str,'lang':lang})
+		if respons_Spelling.json() !=[]:
+			Chhelk.append(respons_Spelling.json()[0]['word'])
+			Chhelk.append(respons_Spelling.json()[0]['s'])
+			return Chhelk
+
+
 	lab0['text'] = '\\/ \\/  \\/  \\/  \\/  \\/'
-
 	bat_Spelling.grid_forget()
 	bat_token.grid_forget()
-	lab01.grid(columnspan=4,row=7,column=0)
-	text_box_spe0.grid(columnspan=4,row=8,column=0)
-	dont_bat_Spelling.grid(columnspan=4,row=9,column=0)	
-
+	dont_bat_Spelling.grid(columnspan=4,row=7,column=0)
 	Chhelk = Spelling(text_box.get(1.0, 'end-1c'))
 
 	try:
-		lab01['text'] = Chhelk[0]
-		ux = ''
-		for x in Chhelk[1]: 
-			ux+=x+str(' ')
-		text_box_spe0.insert(INSERT,str(ux))
+		dont_bat_Spelling['text']=Chhelk[0]
+		global text_dont_bat_Spelling
+		for x in range(6):
+			try:
+				text_dont_bat_Spelling.append(Chhelk[1][x])
+			except IndexError:
+				text_dont_bat_Spelling.append('-')
+
+		text_dont_bat_Spelling.append(Chhelk[0])
+		bat_t_Sp0['text']=text_dont_bat_Spelling[0]
+		bat_t_Sp1['text']=text_dont_bat_Spelling[1]
+		bat_t_Sp2['text']=text_dont_bat_Spelling[2]
+		bat_t_Sp3['text']=text_dont_bat_Spelling[3]
+		bat_t_Sp4['text']=text_dont_bat_Spelling[4]
+		bat_t_Sp5['text']=text_dont_bat_Spelling[5]
+
+					
+		bat_t_Sp0.grid(sticky=W,columnspan=3,row=9,column=0)
+		bat_t_Sp1.grid(columnspan=3,row=9,column=0)
+		bat_t_Sp2.grid(sticky=E,columnspan=3,row=9,column=1)
+		bat_t_Sp3.grid(sticky=W,columnspan=3,row=10,column=0)
+		bat_t_Sp4.grid(columnspan=3,row=10,column=0)
+		bat_t_Sp5.grid(sticky=E,columnspan=3,row=10,column=1)
+
 		Chhelk.clear()
 
 	except TypeError:
@@ -97,10 +126,15 @@ def spl():
 
 def spl_dont():
 	lab0['text'] = '/\\  /\\  /\\  /\\  /\\  /\\'
-	lab01.grid_forget()
+	global text_dont_bat_Spelling
+	text_dont_bat_Spelling.clear()
 	dont_bat_Spelling.grid_forget()
-	text_box_spe0.grid_forget()
-	text_box_spe0.delete(1.0, END)
+	bat_t_Sp0.grid_forget()
+	bat_t_Sp1.grid_forget()
+	bat_t_Sp2.grid_forget()
+	bat_t_Sp3.grid_forget()
+	bat_t_Sp4.grid_forget()
+	bat_t_Sp5.grid_forget()
 	bat_Spelling.grid(columnspan=4,row=6,column=0)
 
 def radio():
@@ -113,6 +147,7 @@ def radio():
 	global Check
 	Check=' '
 
+###################
 def STOP():
 	text_token.grid_forget()
 	
@@ -140,31 +175,36 @@ def STOP():
 
 	bat_Spelling.grid_forget()
 
-	lab01.grid_forget()
-
-	text_box_spe0.grid_forget()
-
 	dont_bat_Spelling.grid_forget()
+
+	bat_t_Sp0.grid_forget()
+	bat_t_Sp1.grid_forget()
+	bat_t_Sp2.grid_forget()
+	bat_t_Sp3.grid_forget()
+	bat_t_Sp4.grid_forget()
+	bat_t_Sp5.grid_forget()
+
+
 	#____________________________________________#
 	bat1.grid(row=0,column=0)
 
 def START():
 
-	bat.grid(columnspan=4,row=0,column=0)
+	bat.grid(columnspan=3,row=0,column=0)
 
-	bat_past.grid(row=1,column=0)
+	bat_past.grid(sticky=W,columnspan=3,row=1,column=0)
 
-	bat_clear.grid(row=1,column=1)
+	bat_clear.grid(columnspan=3,row=1,column=0)
 
-	bat_copy.grid(row=1,column=2)
+	bat_copy.grid(sticky=E,columnspan=3,row=1,column=1)
+
+	radio1.grid(sticky=W,columnspan=3,row=3,column=0)
+
+	lab0.grid(columnspan=3,row=3,column=0)
+
+	radio2.grid(sticky=E,columnspan=3,row=3,column=1)
 
 	text_box.grid(columnspan=4,row=2,column=0)
-
-	lab0.grid(row = 3,column = 1)
-
-	radio1.grid(row=3,column=0)
-
-	radio2.grid(row=3,column=2)
 
 	text_box1.grid(columnspan=6,row=4,column=0)
 
@@ -191,6 +231,7 @@ def START():
 	except FileNotFoundError:
 		lab0['text'] = ' - Token False -'
 		Отладик_задач()
+###################
 
 def paste():
 	a = pyperclip.paste()
@@ -230,6 +271,52 @@ def Отладик_задач():
 	text_token.insert(INSERT,"     Введите Token Яндекс Api переводчик")
 	import_texst.grid(columnspan=4,row=6,column=0)
 #------------------------------------#
+def sending_text(text_sennd,NAME_TEXT):
+
+	a = (text_box.get(1.0, 'end-1c')).split(' ')
+	cash_text= a
+	i = -1
+	for x in a:
+		i+=1
+		if x == NAME_TEXT:
+			cash_text.pop(i)
+			cash_text.insert(i,text_sennd)
+
+	text=''
+	i= len(cash_text)
+	io = 0
+	for y in cash_text:
+		if i == io+1:
+			text+=y
+		else:
+			text+=y+' '
+		io+=1
+
+	text_box.delete(1.0, END)
+	text_box.insert(INSERT,text)
+	spl_dont()
+	spl()
+
+def input_text0():
+	global text_dont_bat_Spelling
+	sending_text(text_dont_bat_Spelling[0],text_dont_bat_Spelling[6])
+def input_text1():
+	global text_dont_bat_Spelling
+	sending_text(text_dont_bat_Spelling[1],text_dont_bat_Spelling[6])
+def input_text2():
+	global text_dont_bat_Spelling
+	sending_text(text_dont_bat_Spelling[2],text_dont_bat_Spelling[6])
+def input_text3():
+	global text_dont_bat_Spelling
+	sending_text(text_dont_bat_Spelling[3],text_dont_bat_Spelling[6])
+def input_text4():
+	global text_dont_bat_Spelling
+	sending_text(text_dont_bat_Spelling[4],text_dont_bat_Spelling[6])
+def input_text5():
+	global text_dont_bat_Spelling
+	sending_text(text_dont_bat_Spelling[5],text_dont_bat_Spelling[6])
+
+#------------------------------------#
 Background ='#4E51D8'
 Text_color='#FFFFFF'
 
@@ -247,32 +334,26 @@ Check = []
 Переключатели = StringVar()
 Переключатели.set('1') 
 token = []
+text_dont_bat_Spelling=[]
 #____________________________________________________________________________#
 text_box = ScrolledText.ScrolledText(root1,width=43, height=15)
 text_box1= ScrolledText.ScrolledText(root1,width=43, height=15)
-
-
-text_box_spe0 = ScrolledText.ScrolledText(root1,width=43, height=1)
 #____________________________________________________________________________#
-
 lab0= Label(root1,width =25,bg  = Background,fg = '#00FFFF',font = ( "Helvetica" , 10))
-
-
-lab01= Label(root1,width =10,bg  = Background,fg = Text_color,font = ( "Helvetica" , 8))
 #____________________________________________________________________________#
-radio1=Radiobutton(root1, text='Русский', selectcolor = Background, bg  = Background,fg = Text_color,value='0',variable=Переключатели,command = radio) # переключатель 
-radio2=Radiobutton(root1, text='Английский',  selectcolor = Background , bg  = Background,fg = Text_color, value='1',variable=Переключатели, command = radio) # переключатель 
+radio1=Radiobutton(root1, text='RU',selectcolor = Background, bg  = Background,fg = Text_color,value='0',variable=Переключатели,command = radio) # переключатель 
+radio2=Radiobutton(root1, text='ENG',selectcolor = Background , bg  = Background,fg = Text_color, value='1',variable=Переключатели, command = radio) # переключатель 
 #____________________________________________________________________________#
-bat = Button(root1, text='STOP', width=50,fg = Text_color,bg  = Background, command = STOP) # кнопка
+bat = Button(root1, text='STOP', width=52,fg = Text_color,bg  = Background, command = STOP) # кнопка
 
-bat_copy = Button(root1,width =10, text='COPY',fg = Text_color,bg  = Background, command = copy) # кнопка
-bat_clear= Button(root1,width =27, text='X_X',fg = Text_color,bg  = Background, command = clear) # кнопка
-bat_past = Button(root1,width =7,text='PASTE',fg = Text_color,bg  = Background, command = paste) # кнопка
+bat_copy = Button(root1,width =16, text='COPY',fg = Text_color,bg  = Background, command = copy) # кнопка
+bat_clear= Button(root1,width =17, text='X_X',fg = Text_color,bg  = Background, command = clear) # кнопка
+bat_past = Button(root1,width =16,text='PASTE',fg = Text_color,bg  = Background, command = paste) # кнопка
 
-bat_token = Button(root1, text='API Яндекс.Переводчик', width=60, command = Отладик_задач,bg  = Background, fg = Text_color, font = ( "Helvetica" , 7) ) # кнопка
+bat_token = Button(root1, text='API Яндекс.Переводчик', width=52, command = Отладик_задач,bg  = Background, fg = Text_color) # кнопка
 
-bat_Spelling=Button(root1,width =60,text='\\/',fg = Text_color,bg  = Background, command = spl,font = ( "Helvetica" , 7)) # кнопка
-dont_bat_Spelling=Button(root1,width =60,text='/\\',fg = Text_color,bg  = Background, command = spl_dont,font = ( "Helvetica" , 7)) # кнопка
+bat_Spelling=Button(root1,width =52,text='\\/', fg = Text_color,bg  = Background, command = spl) # кнопка
+dont_bat_Spelling=Button(root1,width =52,text='/\\',fg = Text_color,bg  = Background, command = spl_dont) # кнопка
 
 #____________________________________________________________________________#
 
@@ -283,6 +364,15 @@ bat1.grid(row=0,column=0)
 
 text_token= Text(root1,width=45, height=1)
 import_texst = Button(root1,width =50,text='Save Token',fg = Text_color,bg  = Background, command = save_text) # кнопка
+
+#____________________________________________________________________________#
+
+bat_t_Sp0= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text0) # 
+bat_t_Sp1= Button(root1,width=20,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text1) # 
+bat_t_Sp2= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text2) # 
+bat_t_Sp3= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text3) # 
+bat_t_Sp4= Button(root1,width=20,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text4) # 
+bat_t_Sp5= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text5) # 
 
 #____________________________________________________________________________#
 START()
