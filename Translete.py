@@ -5,8 +5,11 @@ import os
 import win32api
 import tkinter.scrolledtext as ScrolledText
 import inspect
-
 import time
+from pynput import mouse
+import win32api
+import win32gui
+ 
 #------------------------------------#
 def test_token(token):
 	respons0 = requests.get('https://translate.yandex.net/api/v1.5/tr.json/translate', params={"key":token,
@@ -123,7 +126,6 @@ def spl():
 
 	except TypeError:
 		spl_dont()
-
 def spl_dont():
 	lab0['text'] = '/\\  /\\  /\\  /\\  /\\  /\\'
 	global text_dont_bat_Spelling
@@ -147,7 +149,7 @@ def radio():
 	global Check
 	Check=' '
 
-###################
+#------------------------------------#
 def STOP():
 	text_token.grid_forget()
 	
@@ -185,9 +187,10 @@ def STOP():
 	bat_t_Sp5.grid_forget()
 
 
+
+
 	#____________________________________________#
 	bat1.grid(row=0,column=0)
-
 def START():
 
 	bat.grid(columnspan=3,row=0,column=0)
@@ -231,21 +234,18 @@ def START():
 	except FileNotFoundError:
 		lab0['text'] = ' - Token False -'
 		Отладик_задач()
-###################
+#------------------------------------#
 
 def paste():
 	a = pyperclip.paste()
 	text_box.insert(INSERT,str(a))
 	pass
-
 def copy():
 	pyperclip.copy(text_box1.get(1.0, END))
 	pass
-
 def clear():
 	STOP()
 	START()
-
 def save_text():
 	if text_token.get(1.0, 'end-1c') == "  Введите Token Яндекс Api переводчик":
 		text_token.delete(1.0, END)
@@ -296,7 +296,6 @@ def sending_text(text_sennd,NAME_TEXT):
 	text_box.insert(INSERT,text)
 	spl_dont()
 	spl()
-
 def input_text0():
 	global text_dont_bat_Spelling
 	sending_text(text_dont_bat_Spelling[0],text_dont_bat_Spelling[6])
@@ -315,11 +314,89 @@ def input_text4():
 def input_text5():
 	global text_dont_bat_Spelling
 	sending_text(text_dont_bat_Spelling[5],text_dont_bat_Spelling[6])
-
 #------------------------------------#
+
+######################################################
+
+def скриншот():
+	def кординаты_мыши():
+		def on_click(x, y, button, pressed):
+			#####################
+			nonlocal  mouse_kl
+			f = x,y
+			mouse_kl.append(f)
+			if not pressed:
+				return False
+			#####################
+		mouse_kl = []
+		with mouse.Listener(on_click=on_click) as listener:
+		    listener.join()
+		return mouse_kl
+
+	def отчитска(mouse_kl):
+		#####################
+		mouse_REQ = []
+		#####################
+		x0 = mouse_kl[0][0]
+		x_max = mouse_kl[1][0]
+		b = x0
+		if x_max<x0:
+			x0 = x_max
+			x_max = b
+		#####################
+		y0 = mouse_kl[0][1]
+		y_max = mouse_kl[1][1]
+		b = y0
+		if y_max<y0:
+			y0 = y_max
+			y_max = b
+		#####################
+		X =  x0-x_max
+		Y =  y0-y_max
+		if X < 0:
+			X *= -1
+		if Y < 0:
+			Y *= -1
+		#####################
+		f = x0,x_max,X
+		g = y0,y_max,Y
+		mouse_REQ.append(f)
+		mouse_REQ.append(g)
+		return mouse_REQ
+		#####################
+
+	def заливка(JND):
+		def skrin(JND):
+			import mss
+			import mss.tools
+			with mss.mss() as sct:
+				monitor = {"top": JND[1][0], "left": JND[0][0], "width": JND[0][2], "height":JND[1][2]}
+				mss.tools.to_png(sct.grab(monitor).rgb, sct.grab(monitor).size, output="1.png")
+
+
+
+		dc = win32gui.GetDC(0)
+		red = win32api.RGB(255, 0, 0)
+		x0 = JND[0][0]
+		y0 = JND[1][0]
+
+		for x in range(JND[0][2]):
+			win32gui.SetPixel(dc,x0+x,y0,red) # UP
+			win32gui.SetPixel(dc,x0+x,JND[1][1],red) # UP
+
+		for y in range(JND[1][2]):
+			win32gui.SetPixel(dc,x0,y0+y,red) # UP
+			win32gui.SetPixel(dc,JND[0][1],y0+y,red) # UP
+
+
+		skrin(JND)
+
+
+	заливка(отчитска(кординаты_мыши()))
+
+######################################################
 Background ='#4E51D8'
 Text_color='#FFFFFF'
-
 root1=Tk()
 try:
 	root1.iconbitmap('icos.ico')
@@ -335,6 +412,8 @@ Check = []
 Переключатели.set('1') 
 token = []
 text_dont_bat_Spelling=[]
+
+############################################################################################################
 #____________________________________________________________________________#
 text_box = ScrolledText.ScrolledText(root1,width=43, height=15)
 text_box1= ScrolledText.ScrolledText(root1,width=43, height=15)
@@ -345,26 +424,18 @@ radio1=Radiobutton(root1, text='RU',selectcolor = Background, bg  = Background,f
 radio2=Radiobutton(root1, text='ENG',selectcolor = Background , bg  = Background,fg = Text_color, value='1',variable=Переключатели, command = radio) # переключатель 
 #____________________________________________________________________________#
 bat = Button(root1, text='STOP', width=52,fg = Text_color,bg  = Background, command = STOP) # кнопка
-
 bat_copy = Button(root1,width =16, text='COPY',fg = Text_color,bg  = Background, command = copy) # кнопка
 bat_clear= Button(root1,width =17, text='X_X',fg = Text_color,bg  = Background, command = clear) # кнопка
 bat_past = Button(root1,width =16,text='PASTE',fg = Text_color,bg  = Background, command = paste) # кнопка
-
 bat_token = Button(root1, text='API Яндекс.Переводчик', width=52, command = Отладик_задач,bg  = Background, fg = Text_color) # кнопка
-
 bat_Spelling=Button(root1,width =52,text='\\/', fg = Text_color,bg  = Background, command = spl) # кнопка
 dont_bat_Spelling=Button(root1,width =52,text='/\\',fg = Text_color,bg  = Background, command = spl_dont) # кнопка
-
 #____________________________________________________________________________#
-
 bat1 = Button(root1, text='START', width=15, command = START,bg  = Background, fg = Text_color, font = 'BOLD' ) # кнопка
 bat1.grid(row=0,column=0)
-
 #____________________________________________________________________________#
-
 text_token= Text(root1,width=45, height=1)
 import_texst = Button(root1,width =50,text='Save Token',fg = Text_color,bg  = Background, command = save_text) # кнопка
-
 #____________________________________________________________________________#
 
 bat_t_Sp0= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text0) # 
@@ -373,9 +444,9 @@ bat_t_Sp2= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font 
 bat_t_Sp3= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text3) # 
 bat_t_Sp4= Button(root1,width=20,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text4) # 
 bat_t_Sp5= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text5) # 
+#____________________________________________________________________________#
 
-#____________________________________________________________________________#
 START()
-#____________________________________________________________________________#
 root1.wm_attributes('-topmost',1)
 root1.mainloop()
+############################################################################################################
