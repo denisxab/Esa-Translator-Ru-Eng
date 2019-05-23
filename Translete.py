@@ -10,6 +10,24 @@ from pynput import mouse
 import win32api
 import win32gui
  
+
+import mss
+import mss.tools
+import cv2
+import numpy
+
+
+
+######################################################
+#https://github.com/UB-Mannheim/tesseract/wiki
+import pytesseract
+pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe' # выбрать файл куда устоновилсья
+######################################################
+
+
+
+
+
 #------------------------------------#
 def test_token(token):
 	respons0 = requests.get('https://translate.yandex.net/api/v1.5/tr.json/translate', params={"key":token,
@@ -137,7 +155,7 @@ def spl_dont():
 	bat_t_Sp3.grid_forget()
 	bat_t_Sp4.grid_forget()
 	bat_t_Sp5.grid_forget()
-	bat_Spelling.grid(columnspan=4,row=6,column=0)
+	bat_Spelling.grid(columnspan=4,row=5,column=0)
 
 def radio():
 	if Переключатели.get() == '0':
@@ -186,6 +204,8 @@ def STOP():
 	bat_t_Sp4.grid_forget()
 	bat_t_Sp5.grid_forget()
 
+	skrin_shot_batton.grid_forget()
+
 
 
 
@@ -213,7 +233,11 @@ def START():
 
 	bat_Spelling.grid(columnspan=4,row=5,column=0)
 
-	bat_token.grid(columnspan=4,row=6,column=0)
+	skrin_shot_batton.grid(columnspan=4,row=6,column=0)
+
+	bat_token.grid(columnspan=4,row=7,column=0)
+
+
 
 	text_box.delete(1.0, END)
 
@@ -267,6 +291,7 @@ def save_text():
 
 def Отладик_задач():
 	bat_token.grid_forget()
+	skrin_shot_batton.grid_forget()
 	text_token.grid(columnspan=4,row=5,column=0)
 	text_token.insert(INSERT,"     Введите Token Яндекс Api переводчик")
 	import_texst.grid(columnspan=4,row=6,column=0)
@@ -316,9 +341,9 @@ def input_text5():
 	sending_text(text_dont_bat_Spelling[5],text_dont_bat_Spelling[6])
 #------------------------------------#
 
-######################################################
 
-def скриншот():
+
+def skrinshot():
 	def кординаты_мыши():
 		def on_click(x, y, button, pressed):
 			#####################
@@ -339,44 +364,38 @@ def скриншот():
 		#####################
 		x0 = mouse_kl[0][0]
 		x_max = mouse_kl[1][0]
-		b = x0
-		if x_max<x0:
+		X =  x0-x_max
+		if X < 0:
+			X *= -1
+		else:
+			b  = x0
 			x0 = x_max
 			x_max = b
+		f = x0,x_max,X
+		mouse_REQ.append(f)
 		#####################
 		y0 = mouse_kl[0][1]
 		y_max = mouse_kl[1][1]
-		b = y0
-		if y_max<y0:
-			y0 = y_max
-			y_max = b
-		#####################
-		X =  x0-x_max
 		Y =  y0-y_max
-		if X < 0:
-			X *= -1
 		if Y < 0:
 			Y *= -1
-		#####################
-		f = x0,x_max,X
+		else:
+			b  = y0
+			y0 = y_max
+			y_max = b
 		g = y0,y_max,Y
-		mouse_REQ.append(f)
 		mouse_REQ.append(g)
-		return mouse_REQ
 		#####################
+		return mouse_REQ
 
 	def заливка(JND):
-		def skrin(JND):
-			import mss
-			import mss.tools
-			with mss.mss() as sct:
-				monitor = {"top": JND[1][0], "left": JND[0][0], "width": JND[0][2], "height":JND[1][2]}
-				mss.tools.to_png(sct.grab(monitor).rgb, sct.grab(monitor).size, output="1.png")
-
-
+		# Helpers
+		# mss.tools.to_png(sct.grab(monitor).rgb, sct.grab(monitor).size, output="1.png")
+		# cv2.imwrite('2.png', фото)
+		# print(pytesseract.image_to_string(Image.open('1.png')))
 
 		dc = win32gui.GetDC(0)
-		red = win32api.RGB(255, 0, 0)
+		red = win32api.RGB(78, 81, 216)
 		x0 = JND[0][0]
 		y0 = JND[1][0]
 
@@ -389,12 +408,40 @@ def скриншот():
 			win32gui.SetPixel(dc,JND[0][1],y0+y,red) # UP
 
 
-		skrin(JND)
+		with mss.mss() as sct:
+			monitor = {"top": JND[1][0], "left": JND[0][0], "width": JND[0][2], "height":JND[1][2]}
+			img = numpy.array(sct.grab(monitor))
+			фото = cv2.resize(img,(0,0),fx=10,fy=10)
+			фото = cv2.GaussianBlur(фото,(11,11),0)
+
+			try:
+				a = pytesseract.image_to_string(фото)
+				if a != '':
+					skrin_shot_batton['text'] = '+++ +++ +++ +++ +++'
+					text_box.delete(1.0, END)
+					text_box.insert(INSERT,str(a))
+					try:
+						os.remove('except_photo.png')
+					except FileNotFoundError:
+						pass
+				else:
+					skrin_shot_batton['text'] = 'XXX XXX XXX XXX XXX'
+					cv2.imwrite('except_photo.png', фото)
 
 
+			except pytesseract.pytesseract.TesseractNotFoundError:
+				text_box.delete(1.0, END)
+				text_box.insert(INSERT,'Для работы этой функции необходимо устоновить tesseract по ссылки\nhttps://github.com/UB-Mannheim/tesseract/wiki\nУкажите при устоновки следующий путь\nC:\\Program Files\\Tesseract-OCR')
+
+	skrin_shot_batton['text'] = '[0]'
 	заливка(отчитска(кординаты_мыши()))
 
-######################################################
+	
+
+	
+
+
+
 Background ='#4E51D8'
 Text_color='#FFFFFF'
 root1=Tk()
@@ -412,6 +459,7 @@ Check = []
 Переключатели.set('1') 
 token = []
 text_dont_bat_Spelling=[]
+
 
 ############################################################################################################
 #____________________________________________________________________________#
@@ -444,6 +492,8 @@ bat_t_Sp2= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font 
 bat_t_Sp3= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text3) # 
 bat_t_Sp4= Button(root1,width=20,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text4) # 
 bat_t_Sp5= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text5) # 
+#____________________________________________________________________________#
+skrin_shot_batton = Button(root1, text='[O]', width=52, command = skrinshot,bg  = Background, fg = Text_color) # кнопка
 #____________________________________________________________________________#
 
 START()
