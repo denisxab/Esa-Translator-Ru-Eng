@@ -241,7 +241,6 @@ def START():
 
 	#____________________________________________#
 	try:
-
 		with open('token_Y.txt','r') as file:
 			token_r = file.read()
 			global token
@@ -357,9 +356,8 @@ def skrinshot_s():
 	if X < 0:
 		X *= -1
 	else:
-		b  = x0
 		x0 = x_max
-		x_max = b
+		x_max = mouse_kl[0][0]
 	#####################
 	y0 = mouse_kl[0][1]
 	y_max = mouse_kl[1][1]
@@ -367,21 +365,20 @@ def skrinshot_s():
 	if Y < 0:
 		Y *= -1
 	else:
-		b  = y0
 		y0 = y_max
-		y_max = b
+		y_max = mouse_kl[0][1]
 	#####################
 
 	dc = win32gui.GetDC(0)
 	red = win32api.RGB(78, 81, 216)
 
 	for x in range(X):
-		win32gui.SetPixel(dc,x0+x,y0,red) # UP
-		win32gui.SetPixel(dc,x0+x,y_max,red) # UP
+		win32gui.SetPixel(dc,x0+x,y0,red)
+		win32gui.SetPixel(dc,x0+x,y_max,red)
 
 	for y in range(Y):
-		win32gui.SetPixel(dc,x0,y0+y,red) # UP
-		win32gui.SetPixel(dc,x_max,y0+y,red) # UP
+		win32gui.SetPixel(dc,x0,y0+y,red)
+		win32gui.SetPixel(dc,x_max,y0+y,red)
 
 
 	with mss.mss() as sct:
@@ -407,12 +404,9 @@ def skrinshot_s():
 			cv2.imwrite('except_photo.png', img)
 
 	except pytesseract.pytesseract.TesseractNotFoundError:
-		b = 0
-		for x in os.listdir():
-			if x == 'tesseract-ocr.exe':
-				os.system('tesseract-ocr.exe')
-				b = 1
-		if b == 0:
+		if 'tesseract-ocr.exe' in os.listdir():
+			os.system('tesseract-ocr.exe')
+		else:
 			text_box.delete(1.0, END)
 			text_box.insert(INSERT,'Для работы этой функции необходимо устоновить tesseract по ссылки\nhttps://github.com/UB-Mannheim/tesseract/wiki\nУкажите при устоновки следующий путь\nC:\\Program Files\\Tesseract-OCR')
 
