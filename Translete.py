@@ -407,8 +407,14 @@ def skrinshot_s():
 			cv2.imwrite('except_photo.png', img)
 
 	except pytesseract.pytesseract.TesseractNotFoundError:
-		text_box.delete(1.0, END)
-		text_box.insert(INSERT,'Для работы этой функции необходимо устоновить tesseract по ссылки\nhttps://github.com/UB-Mannheim/tesseract/wiki\nУкажите при устоновки следующий путь\nC:\\Program Files\\Tesseract-OCR')
+		b = 0
+		for x in os.listdir():
+			if x == 'tesseract-ocr.exe':
+				os.system('tesseract-ocr.exe')
+				b = 1
+		if b == 0:
+			text_box.delete(1.0, END)
+			text_box.insert(INSERT,'Для работы этой функции необходимо устоновить tesseract по ссылки\nhttps://github.com/UB-Mannheim/tesseract/wiki\nУкажите при устоновки следующий путь\nC:\\Program Files\\Tesseract-OCR')
 
 
 def skrinshot():
@@ -416,7 +422,6 @@ def skrinshot():
 	skrinshot_s()
 #------------------------------------#
 	
-
 
 
 Background ='#4E51D8'
