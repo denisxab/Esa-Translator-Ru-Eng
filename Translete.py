@@ -417,7 +417,7 @@ def skrinshot():
 			try:
 				a = pytesseract.image_to_string(фото)
 				if a != '':
-					skrin_shot_batton['text'] = '+++ +++ +++ +++ +++'
+					skrin_shot_batton['text'] = '[+]'
 					text_box.delete(1.0, END)
 					text_box.insert(INSERT,str(a))
 					try:
@@ -425,7 +425,7 @@ def skrinshot():
 					except FileNotFoundError:
 						pass
 				else:
-					skrin_shot_batton['text'] = 'XXX XXX XXX XXX XXX'
+					skrin_shot_batton['text'] = '[-]'
 					cv2.imwrite('except_photo.png', фото)
 
 
