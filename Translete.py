@@ -34,7 +34,7 @@ def test_token(token):
 			'text':'Привет мир !','format':'plain','lang':'en'})
 	if respons0.json()['code'] == 401:
 		lab0['text'] = ' - Token False -'
-		Отладик_задач()
+		Debugging_tasks()
 		return 0
 	else:
 		radio()
@@ -61,10 +61,10 @@ def transelte():
 
 
 	if a  != Check:
-		if Переключатели.get() == '0':
+		if Switches_radio.get() == '0':
 			lang = 'ru'
 
-		if Переключатели.get() == '1':
+		if Switches_radio.get() == '1':
 			lang = 'en'
 
 		resiut = transelte_func(a,lang,token)
@@ -85,9 +85,9 @@ def spl():
 
 	def Spelling(text):
 		Chhelk = []
-		if Переключатели.get() == '0':
+		if Switches_radio.get() == '0':
 			lang = 'en'
-		if Переключатели.get() == '1':
+		if Switches_radio.get() == '1':
 			lang = 'ru'
 
 		texts = text.split(' ')
@@ -131,8 +131,7 @@ def spl():
 		bat_t_Sp3['text']=text_dont_bat_Spelling[3]
 		bat_t_Sp4['text']=text_dont_bat_Spelling[4]
 		bat_t_Sp5['text']=text_dont_bat_Spelling[5]
-
-					
+			
 		bat_t_Sp0.grid(sticky=W,columnspan=3,row=9,column=0)
 		bat_t_Sp1.grid(columnspan=3,row=9,column=0)
 		bat_t_Sp2.grid(sticky=E,columnspan=3,row=9,column=1)
@@ -144,6 +143,7 @@ def spl():
 
 	except TypeError:
 		spl_dont()
+
 def spl_dont():
 	lab0['text'] = '/\\  /\\  /\\  /\\  /\\  /\\'
 	global text_dont_bat_Spelling
@@ -158,10 +158,10 @@ def spl_dont():
 	bat_Spelling.grid(columnspan=4,row=5,column=0)
 
 def radio():
-	if Переключатели.get() == '0':
+	if Switches_radio.get() == '0':
 		win32api.LoadKeyboardLayout("00000409",1)
 
-	if Переключатели.get() == '1':
+	if Switches_radio.get() == '1':
 		win32api.LoadKeyboardLayout("00000419",1)
 
 	global Check
@@ -205,10 +205,6 @@ def STOP():
 	bat_t_Sp5.grid_forget()
 
 	skrin_shot_batton.grid_forget()
-
-
-
-
 	#____________________________________________#
 	bat1.grid(row=0,column=0)
 def START():
@@ -237,8 +233,6 @@ def START():
 
 	bat_token.grid(columnspan=4,row=7,column=0)
 
-
-
 	text_box.delete(1.0, END)
 
 	text_box1.delete(1.0, END)
@@ -257,7 +251,7 @@ def START():
 
 	except FileNotFoundError:
 		lab0['text'] = ' - Token False -'
-		Отладик_задач()
+		Debugging_tasks()
 #------------------------------------#
 
 def paste():
@@ -265,7 +259,7 @@ def paste():
 	text_box.insert(INSERT,str(a))
 	pass
 def copy():
-	pyperclip.copy(text_box1.get(1.0, END))
+	pyperclip.copy(text_box1.get(1.0, 'end-1c'))
 	pass
 def clear():
 	STOP()
@@ -289,7 +283,7 @@ def save_text():
 			text_token.delete(1.0, END)
 			text_token.insert(INSERT,"               Token не работает")
 
-def Отладик_задач():
+def Debugging_tasks():
 	bat_token.grid_forget()
 	skrin_shot_batton.grid_forget()
 	text_token.grid(columnspan=4,row=5,column=0)
@@ -297,7 +291,6 @@ def Отладик_задач():
 	import_texst.grid(columnspan=4,row=6,column=0)
 #------------------------------------#
 def sending_text(text_sennd,NAME_TEXT):
-
 	a = (text_box.get(1.0, 'end-1c')).split(' ')
 	cash_text= a
 	i = -1
@@ -341,10 +334,8 @@ def input_text5():
 	sending_text(text_dont_bat_Spelling[5],text_dont_bat_Spelling[6])
 #------------------------------------#
 
-
-
 def skrinshot():
-	def кординаты_мыши():
+	def coordinates_mouse():
 		def on_click(x, y, button, pressed):
 			#####################
 			nonlocal  mouse_kl
@@ -358,7 +349,7 @@ def skrinshot():
 		    listener.join()
 		return mouse_kl
 
-	def отчитска(mouse_kl):
+	def data_pereparation(mouse_kl):
 		#####################
 		mouse_REQ = []
 		#####################
@@ -388,10 +379,10 @@ def skrinshot():
 		#####################
 		return mouse_REQ
 
-	def заливка(JND):
+	def color_windows(JND):
 		# Helpers
 		# mss.tools.to_png(sct.grab(monitor).rgb, sct.grab(monitor).size, output="1.png")
-		# cv2.imwrite('2.png', фото)
+		# cv2.imwrite('2.png', img)
 		# print(pytesseract.image_to_string(Image.open('1.png')))
 
 		dc = win32gui.GetDC(0)
@@ -410,12 +401,12 @@ def skrinshot():
 
 		with mss.mss() as sct:
 			monitor = {"top": JND[1][0], "left": JND[0][0], "width": JND[0][2], "height":JND[1][2]}
-			img = numpy.array(sct.grab(monitor))
-			фото = cv2.resize(img,(0,0),fx=10,fy=10)
-			фото = cv2.GaussianBlur(фото,(11,11),0)
+			# img = numpy.array(sct.grab(monitor))
+			img = cv2.resize(numpy.array(sct.grab(monitor)),(0,0),fx=10,fy=10)
+			img = cv2.GaussianBlur(img,(11,11),0)
 
 			try:
-				a = pytesseract.image_to_string(фото)
+				a = pytesseract.image_to_string(img)
 				if a != '':
 					skrin_shot_batton['text'] = '[+]'
 					text_box.delete(1.0, END)
@@ -426,7 +417,7 @@ def skrinshot():
 						pass
 				else:
 					skrin_shot_batton['text'] = '[-]'
-					cv2.imwrite('except_photo.png', фото)
+					cv2.imwrite('except_photo.png', img)
 
 
 			except pytesseract.pytesseract.TesseractNotFoundError:
@@ -434,11 +425,11 @@ def skrinshot():
 				text_box.insert(INSERT,'Для работы этой функции необходимо устоновить tesseract по ссылки\nhttps://github.com/UB-Mannheim/tesseract/wiki\nУкажите при устоновки следующий путь\nC:\\Program Files\\Tesseract-OCR')
 
 	skrin_shot_batton['text'] = '[0]'
-	заливка(отчитска(кординаты_мыши()))
+	color_windows(data_pereparation(coordinates_mouse()))
 
+#------------------------------------#
 	
 
-	
 
 
 
@@ -455,8 +446,8 @@ root1["bg"] = Background
 root1.resizable(width=False, height=False)
 
 Check = []
-Переключатели = StringVar()
-Переключатели.set('1') 
+Switches_radio = StringVar()
+Switches_radio.set('1') 
 token = []
 text_dont_bat_Spelling=[]
 
@@ -468,34 +459,33 @@ text_box1= ScrolledText.ScrolledText(root1,width=43, height=15)
 #____________________________________________________________________________#
 lab0= Label(root1,width =25,bg  = Background,fg = '#00FFFF',font = ( "Helvetica" , 10))
 #____________________________________________________________________________#
-radio1=Radiobutton(root1, text='RU',selectcolor = Background, bg  = Background,fg = Text_color,value='0',variable=Переключатели,command = radio) # переключатель 
-radio2=Radiobutton(root1, text='ENG',selectcolor = Background , bg  = Background,fg = Text_color, value='1',variable=Переключатели, command = radio) # переключатель 
+radio1=Radiobutton(root1, text='RU',selectcolor = Background, bg  = Background,fg = Text_color,value='0',variable=Switches_radio,command = radio)
+radio2=Radiobutton(root1, text='ENG',selectcolor = Background , bg  = Background,fg = Text_color, value='1',variable=Switches_radio, command = radio) 
 #____________________________________________________________________________#
-bat = Button(root1, text='STOP', width=52,fg = Text_color,bg  = Background, command = STOP) # кнопка
-bat_copy = Button(root1,width =16, text='COPY',fg = Text_color,bg  = Background, command = copy) # кнопка
-bat_clear= Button(root1,width =17, text='X_X',fg = Text_color,bg  = Background, command = clear) # кнопка
-bat_past = Button(root1,width =16,text='PASTE',fg = Text_color,bg  = Background, command = paste) # кнопка
-bat_token = Button(root1, text='API Яндекс.Переводчик', width=52, command = Отладик_задач,bg  = Background, fg = Text_color) # кнопка
-bat_Spelling=Button(root1,width =52,text='\\/', fg = Text_color,bg  = Background, command = spl) # кнопка
-dont_bat_Spelling=Button(root1,width =52,text='/\\',fg = Text_color,bg  = Background, command = spl_dont) # кнопка
+bat = Button(root1, text='STOP', width=52,fg = Text_color,bg  = Background, command = STOP)
+bat_copy = Button(root1,width =16, text='COPY',fg = Text_color,bg  = Background, command = copy)
+bat_clear= Button(root1,width =17, text='X_X',fg = Text_color,bg  = Background, command = clear)
+bat_past = Button(root1,width =16,text='PASTE',fg = Text_color,bg  = Background, command = paste)
+bat_token = Button(root1, text='API Яндекс.Переводчик', width=52, command = Debugging_tasks,bg  = Background, fg = Text_color)
+bat_Spelling=Button(root1,width =52,text='\\/', fg = Text_color,bg  = Background, command = spl)
+dont_bat_Spelling=Button(root1,width =52,text='/\\',fg = Text_color,bg  = Background, command = spl_dont) 
 #____________________________________________________________________________#
-bat1 = Button(root1, text='START', width=15, command = START,bg  = Background, fg = Text_color, font = 'BOLD' ) # кнопка
+bat1 = Button(root1, text='START', width=15, command = START,bg  = Background, fg = Text_color, font = 'BOLD' ) 
 bat1.grid(row=0,column=0)
 #____________________________________________________________________________#
 text_token= Text(root1,width=45, height=1)
-import_texst = Button(root1,width =50,text='Save Token',fg = Text_color,bg  = Background, command = save_text) # кнопка
+import_texst = Button(root1,width =50,text='Save Token',fg = Text_color,bg  = Background, command = save_text)  
 #____________________________________________________________________________#
 
-bat_t_Sp0= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text0) # 
-bat_t_Sp1= Button(root1,width=20,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text1) # 
-bat_t_Sp2= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text2) # 
-bat_t_Sp3= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text3) # 
-bat_t_Sp4= Button(root1,width=20,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text4) # 
-bat_t_Sp5= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text5) # 
+bat_t_Sp0= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text0)
+bat_t_Sp1= Button(root1,width=20,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text1)
+bat_t_Sp2= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text2)
+bat_t_Sp3= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text3)
+bat_t_Sp4= Button(root1,width=20,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text4)
+bat_t_Sp5= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text5)
 #____________________________________________________________________________#
-skrin_shot_batton = Button(root1, text='[O]', width=52, command = skrinshot,bg  = Background, fg = Text_color) # кнопка
+skrin_shot_batton = Button(root1, text='[O]', width=52, command = skrinshot,bg  = Background, fg = Text_color) 
 #____________________________________________________________________________#
-
 START()
 root1.wm_attributes('-topmost',1)
 root1.mainloop()
