@@ -334,102 +334,88 @@ def input_text5():
 	sending_text(text_dont_bat_Spelling[5],text_dont_bat_Spelling[6])
 #------------------------------------#
 
-def skrinshot():
-	def coordinates_mouse():
-		def on_click(x, y, button, pressed):
-			#####################
-			nonlocal  mouse_kl
-			f = x,y
-			mouse_kl.append(f)
-			if not pressed:
-				return False
-			#####################
-		mouse_kl = []
-		with mouse.Listener(on_click=on_click) as listener:
-		    listener.join()
-		return mouse_kl
-
-	def data_pereparation(mouse_kl):
+def skrinshot_s():
+	def on_click(x, y, button, pressed):
 		#####################
-		mouse_REQ = []
+		nonlocal  mouse_kl
+		f = x,y
+		mouse_kl.append(f)
+		if not pressed:
+			return False
 		#####################
-		x0 = mouse_kl[0][0]
-		x_max = mouse_kl[1][0]
-		X =  x0-x_max
-		if X < 0:
-			X *= -1
-		else:
-			b  = x0
-			x0 = x_max
-			x_max = b
-		f = x0,x_max,X
-		mouse_REQ.append(f)
-		#####################
-		y0 = mouse_kl[0][1]
-		y_max = mouse_kl[1][1]
-		Y =  y0-y_max
-		if Y < 0:
-			Y *= -1
-		else:
-			b  = y0
-			y0 = y_max
-			y_max = b
-		g = y0,y_max,Y
-		mouse_REQ.append(g)
-		#####################
-		return mouse_REQ
-
-	def color_windows(JND):
-		# Helpers
-		# mss.tools.to_png(sct.grab(monitor).rgb, sct.grab(monitor).size, output="1.png")
-		# cv2.imwrite('2.png', img)
-		# print(pytesseract.image_to_string(Image.open('1.png')))
-
-		dc = win32gui.GetDC(0)
-		red = win32api.RGB(78, 81, 216)
-		x0 = JND[0][0]
-		y0 = JND[1][0]
-
-		for x in range(JND[0][2]):
-			win32gui.SetPixel(dc,x0+x,y0,red) # UP
-			win32gui.SetPixel(dc,x0+x,JND[1][1],red) # UP
-
-		for y in range(JND[1][2]):
-			win32gui.SetPixel(dc,x0,y0+y,red) # UP
-			win32gui.SetPixel(dc,JND[0][1],y0+y,red) # UP
+	mouse_kl = []
+	root1.update()
+	with mouse.Listener(on_click=on_click) as listener:
+	    listener.join()
 
 
-		with mss.mss() as sct:
-			monitor = {"top": JND[1][0], "left": JND[0][0], "width": JND[0][2], "height":JND[1][2]}
-			# img = numpy.array(sct.grab(monitor))
+	START()
+	#####################
+	x0 = mouse_kl[0][0]
+	x_max = mouse_kl[1][0]
+	X =  x0-x_max
+	if X < 0:
+		X *= -1
+	else:
+		b  = x0
+		x0 = x_max
+		x_max = b
+	#####################
+	y0 = mouse_kl[0][1]
+	y_max = mouse_kl[1][1]
+	Y =  y0-y_max
+	if Y < 0:
+		Y *= -1
+	else:
+		b  = y0
+		y0 = y_max
+		y_max = b
+	#####################
+
+	dc = win32gui.GetDC(0)
+	red = win32api.RGB(78, 81, 216)
+
+	for x in range(X):
+		win32gui.SetPixel(dc,x0+x,y0,red) # UP
+		win32gui.SetPixel(dc,x0+x,y_max,red) # UP
+
+	for y in range(Y):
+		win32gui.SetPixel(dc,x0,y0+y,red) # UP
+		win32gui.SetPixel(dc,x_max,y0+y,red) # UP
+
+
+	with mss.mss() as sct:
+		monitor = {"top":y0, "left": x0, "width": X, "height":Y}
+		try:
 			img = cv2.resize(numpy.array(sct.grab(monitor)),(0,0),fx=10,fy=10)
-			img = cv2.GaussianBlur(img,(11,11),0)
+		except TypeError:
+			return
 
+	img = cv2.GaussianBlur(img,(11,11),0)
+	try:
+		a = pytesseract.image_to_string(img)
+		if a != '':
+			skrin_shot_batton['text'] = '[+]'
+			text_box.delete(1.0, END)
+			text_box.insert(INSERT,str(a))
 			try:
-				a = pytesseract.image_to_string(img)
-				if a != '':
-					skrin_shot_batton['text'] = '[+]'
-					text_box.delete(1.0, END)
-					text_box.insert(INSERT,str(a))
-					try:
-						os.remove('except_photo.png')
-					except FileNotFoundError:
-						pass
-				else:
-					skrin_shot_batton['text'] = '[-]'
-					cv2.imwrite('except_photo.png', img)
+				os.remove('except_photo.png')
+			except FileNotFoundError:
+				pass
+		else:
+			skrin_shot_batton['text'] = '[-]'
+			cv2.imwrite('except_photo.png', img)
+
+	except pytesseract.pytesseract.TesseractNotFoundError:
+		text_box.delete(1.0, END)
+		text_box.insert(INSERT,'Для работы этой функции необходимо устоновить tesseract по ссылки\nhttps://github.com/UB-Mannheim/tesseract/wiki\nУкажите при устоновки следующий путь\nC:\\Program Files\\Tesseract-OCR')
 
 
-			except pytesseract.pytesseract.TesseractNotFoundError:
-				text_box.delete(1.0, END)
-				text_box.insert(INSERT,'Для работы этой функции необходимо устоновить tesseract по ссылки\nhttps://github.com/UB-Mannheim/tesseract/wiki\nУкажите при устоновки следующий путь\nC:\\Program Files\\Tesseract-OCR')
-
-	skrin_shot_batton['text'] = '[0]'
-	color_windows(data_pereparation(coordinates_mouse()))
-
+def skrinshot():
+	STOP()
+	skrinshot_s()
 #------------------------------------#
 	
-
 
 
 
