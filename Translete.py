@@ -9,7 +9,7 @@ from pynput import mouse
 import win32api
 import win32gui
 
-
+import sys
 from PIL import Image,ImageTk
 import mss
 import mss.tools
@@ -363,7 +363,13 @@ def skrinshot_s():
 
 	#####################
 	x0 = mouse_kl[0][0]
-	x_max = mouse_kl[1][0]
+	try:
+		x_max = mouse_kl[1][0]
+	except IndexError:
+		skrinshot_s()
+		return
+
+
 	X =  x0-x_max
 	if X < 0:
 		X *= -1
@@ -408,7 +414,8 @@ def skrinshot_s():
 
 	img = cv2.GaussianBlur(img,(11,11),0)
 	try:
-		a = pytesseract.image_to_string(img)
+		a = pytesseract.image_to_string(img,lang='eng')
+
 		if a != '':
 			skrin_shot_batton['text'] = '[+]'
 			text_box.delete(1.0, END)
@@ -422,27 +429,31 @@ def skrinshot_s():
 			cv2.imwrite('except_photo.png', img)
 
 	except pytesseract.pytesseract.TesseractNotFoundError:
-		b = 0
-		for x in os.listdir():
-			if x == 'tesseract-ocr.exe':
-				os.system('tesseract-ocr.exe')
-				b = 1
-		if b == 0:
+
+		if 'tesseract-ocr.exe' in os.listdir():
+			return 1
+
+		else:
 			text_box.delete(1.0, END)
 			text_box.insert(INSERT,'Для работы этой функции необходимо устоновить tesseract по ссылки\nhttps://github.com/UB-Mannheim/tesseract/wiki\nУкажите при устоновки следующий путь\nC:\\Program Files\\Tesseract-OCR')
 
-
-
-	container.grid_forget()
-	root1.update()
-	root1.overrideredirect(0)
+	except pytesseract.pytesseract.TesseractError:
+		text_box.delete(1.0, END)
+		text_box.insert(INSERT,'Выбраный язык не устоновлен - выберите этот язык при устоновки')
 
 
 		
 def skrinshot():
 	STOP()
 	root1.update()
-	skrinshot_s()
+	resaut = skrinshot_s()
+	container.grid_forget()
+	root1.update()
+	root1.overrideredirect(0)
+
+	if resaut:
+		os.system('tesseract-ocr.exe')
+
 #------------------------------------#
 	
 
