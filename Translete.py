@@ -2,29 +2,26 @@ import requests
 from tkinter import *
 import pyperclip
 import os
-import win32api
 import tkinter.scrolledtext as ScrolledText
 import inspect
 import time
 from pynput import mouse
 import win32api
 import win32gui
- 
 
+
+from PIL import Image,ImageTk
 import mss
 import mss.tools
 import cv2
 import numpy
-
-
+import threading
 
 ######################################################
 #https://github.com/UB-Mannheim/tesseract/wiki
 import pytesseract
 pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe' # выбрать файл куда устоновилсья
 ######################################################
-
-
 
 
 
@@ -239,6 +236,8 @@ def START():
 
 	bat1.grid_forget()
 
+
+
 	#____________________________________________#
 	try:
 		with open('token_Y.txt','r') as file:
@@ -342,13 +341,26 @@ def skrinshot_s():
 		if not pressed:
 			return False
 		#####################
-	mouse_kl = []
+
+
+	with mss.mss() as sct:
+		monitor = {"top":0, "left": 0, "width": win32api.GetSystemMetrics(0), "height":win32api.GetSystemMetrics(1)}
+		sct_img   = sct.grab(monitor)
+		mss.tools.to_png(sct_img.rgb, sct_img.size, output='photo_t.png')
+
+	bat1.grid_forget()
+	container.grid()
+	imgas = ImageTk.PhotoImage(Image.open('photo_t.png'))
+	container['image'] = imgas
+	root1.geometry('+0+0')
+	root1.overrideredirect(1)
 	root1.update()
+
+
+	mouse_kl = []
 	with mouse.Listener(on_click=on_click) as listener:
 	    listener.join()
 
-
-	START()
 	#####################
 	x0 = mouse_kl[0][0]
 	x_max = mouse_kl[1][0]
@@ -356,8 +368,9 @@ def skrinshot_s():
 	if X < 0:
 		X *= -1
 	else:
+		b  = x0
 		x0 = x_max
-		x_max = mouse_kl[0][0]
+		x_max = b
 	#####################
 	y0 = mouse_kl[0][1]
 	y_max = mouse_kl[1][1]
@@ -365,8 +378,9 @@ def skrinshot_s():
 	if Y < 0:
 		Y *= -1
 	else:
+		b  = y0
 		y0 = y_max
-		y_max = mouse_kl[0][1]
+		y_max = b
 	#####################
 
 	dc = win32gui.GetDC(0)
@@ -378,7 +392,7 @@ def skrinshot_s():
 
 	for y in range(Y):
 		win32gui.SetPixel(dc,x0,y0+y,red)
-		win32gui.SetPixel(dc,x_max,y0+y,red)
+		win32gui.SetPixel(dc,x_max,y0+y,red) 
 
 
 	with mss.mss() as sct:
@@ -387,6 +401,10 @@ def skrinshot_s():
 			img = cv2.resize(numpy.array(sct.grab(monitor)),(0,0),fx=10,fy=10)
 		except TypeError:
 			return
+
+	#####################
+	START()
+	#####################
 
 	img = cv2.GaussianBlur(img,(11,11),0)
 	try:
@@ -404,15 +422,26 @@ def skrinshot_s():
 			cv2.imwrite('except_photo.png', img)
 
 	except pytesseract.pytesseract.TesseractNotFoundError:
-		if 'tesseract-ocr.exe' in os.listdir():
-			os.system('tesseract-ocr.exe')
-		else:
+		b = 0
+		for x in os.listdir():
+			if x == 'tesseract-ocr.exe':
+				os.system('tesseract-ocr.exe')
+				b = 1
+		if b == 0:
 			text_box.delete(1.0, END)
 			text_box.insert(INSERT,'Для работы этой функции необходимо устоновить tesseract по ссылки\nhttps://github.com/UB-Mannheim/tesseract/wiki\nУкажите при устоновки следующий путь\nC:\\Program Files\\Tesseract-OCR')
 
 
+
+	container.grid_forget()
+	root1.update()
+	root1.overrideredirect(0)
+
+
+		
 def skrinshot():
 	STOP()
+	root1.update()
 	skrinshot_s()
 #------------------------------------#
 	
@@ -471,6 +500,8 @@ bat_t_Sp5= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font 
 #____________________________________________________________________________#
 skrin_shot_batton = Button(root1, text='[O]', width=52, command = skrinshot,bg  = Background, fg = Text_color) 
 #____________________________________________________________________________#
+container = Label(root1)
+
 START()
 root1.wm_attributes('-topmost',1)
 root1.mainloop()
