@@ -18,7 +18,7 @@ import numpy
 ######################################################
 #https://github.com/UB-Mannheim/tesseract/wiki
 import pytesseract
-pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe' # выбрать файл куда устоновилсья
+pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe' # выбрать файл с Tesseract-OCR
 ######################################################
 
 
