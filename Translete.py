@@ -126,7 +126,7 @@ def spl():
 		bat_t_Sp3['text']=text_dont_bat_Spelling[3]
 		bat_t_Sp4['text']=text_dont_bat_Spelling[4]
 		bat_t_Sp5['text']=text_dont_bat_Spelling[5]
-			
+
 		bat_t_Sp0.grid(sticky=W,columnspan=3,row=9,column=0)
 		bat_t_Sp1.grid(columnspan=3,row=9,column=0)
 		bat_t_Sp2.grid(sticky=E,columnspan=3,row=9,column=1)
@@ -165,77 +165,44 @@ def radio():
 #------------------------------------#
 def STOP():
 	text_token.grid_forget()
-	
 	import_texst.grid_forget()
-
 	text_box.grid_forget()
-
 	bat_copy.grid_forget()
-
 	bat_clear.grid_forget()
-
 	bat_past.grid_forget()
-
 	text_box1.grid_forget()
-
 	lab0.grid_forget ()
-
 	bat_token.grid_forget()
-
 	radio1.grid_forget()
-
 	radio2.grid_forget()
-
 	bat.grid_forget()
-
 	bat_Spelling.grid_forget()
-
 	dont_bat_Spelling.grid_forget()
-
 	bat_t_Sp0.grid_forget()
 	bat_t_Sp1.grid_forget()
 	bat_t_Sp2.grid_forget()
 	bat_t_Sp3.grid_forget()
 	bat_t_Sp4.grid_forget()
 	bat_t_Sp5.grid_forget()
-
 	skrin_shot_batton.grid_forget()
 	#____________________________________________#
 	bat1.grid(row=0,column=0)
 def START():
-
 	bat.grid(columnspan=3,row=0,column=0)
-
 	bat_past.grid(sticky=W,columnspan=3,row=1,column=0)
-
 	bat_clear.grid(columnspan=3,row=1,column=0)
-
 	bat_copy.grid(sticky=E,columnspan=3,row=1,column=1)
-
 	radio1.grid(sticky=W,columnspan=3,row=3,column=0)
-
 	lab0.grid(columnspan=3,row=3,column=0)
-
 	radio2.grid(sticky=E,columnspan=3,row=3,column=1)
-
 	text_box.grid(columnspan=4,row=2,column=0)
-
 	text_box1.grid(columnspan=6,row=4,column=0)
-
 	bat_Spelling.grid(columnspan=4,row=5,column=0)
-
 	skrin_shot_batton.grid(columnspan=4,row=6,column=0)
-
 	bat_token.grid(columnspan=4,row=7,column=0)
-
 	text_box.delete(1.0, END)
-
 	text_box1.delete(1.0, END)
-
 	bat1.grid_forget()
-
-
-
 	#____________________________________________#
 	try:
 		with open('token_Y.txt','r') as file:
@@ -249,7 +216,6 @@ def START():
 		lab0['text'] = ' - Token False -'
 		Debugging_tasks()
 #------------------------------------#
-
 def paste():
 	a = pyperclip.paste()
 	text_box.insert(INSERT,str(a))
@@ -278,7 +244,6 @@ def save_text():
 		else:
 			text_token.delete(1.0, END)
 			text_token.insert(INSERT,"               Token не работает")
-
 def Debugging_tasks():
 	bat_token.grid_forget()
 	skrin_shot_batton.grid_forget()
@@ -329,7 +294,6 @@ def input_text5():
 	global text_dont_bat_Spelling
 	sending_text(text_dont_bat_Spelling[5],text_dont_bat_Spelling[6])
 #------------------------------------#
-
 def skrinshot_s():
 	def one(event):
 		def paint_square(event):
@@ -380,11 +344,14 @@ def skrinshot_s():
 
 			#####################
 			paint.grid_forget()
-			START()
+			lab0.grid()
+			nonlocal location_window
+			root1.geometry('+{}+{}'.format(location_window[0],location_window[1]))
 			root1.update()
 			root1.overrideredirect(0)
+			root1.update()
+			START()
 			#####################
-
 			try:
 				a = pytesseract.image_to_string(img,lang='eng')
 				if a != '':
@@ -410,40 +377,38 @@ def skrinshot_s():
 				text_box.delete(1.0, END)
 				text_box.insert(INSERT,'Выбраный язык не устоновлен - выберите этот язык при устоновки')
 
+			root1.bind('F1',skrinshot)
 
 		else:
 			paint_square(event)
 
 
-
-
-
 	global imgas
 	imgas = ImageTk.PhotoImage(Image.open('photo_t.png'))
 	paint.create_image(0,0, anchor=NW,image=imgas)
+	location_window = (root1.winfo_x(),root1.winfo_y())#(root1.winfo_screenwidth(),root1.winfo_screenheight())
 	paint.grid()
+	root1.geometry('+0+0')
 	root1.update()
 
 	x=y=0
 	root1.bind('<B1-Motion>',one)
 	root1.bind('<ButtonRelease-1>',one)
 
-
-
-
-		
 def skrinshot():
+	root1.unbind('F1')
 	STOP()
 	root1.update()
 	with mss.mss() as sct:
 		monitor = {"top":0, "left": 0, "width": win32api.GetSystemMetrics(0), "height":win32api.GetSystemMetrics(1)}
 		mss.tools.to_png(sct.grab(monitor).rgb, sct.grab(monitor).size, output='photo_t.png')
-	bat1.grid_forget()	
+	bat1.grid_forget()
 	root1.overrideredirect(1)
-	root1.geometry('+0+0')
-	resaut = skrinshot_s()
+	skrinshot_s()
+
+def skrinshot_bid(event):
+	skrinshot()
 #------------------------------------#
-	
 
 
 Background ='#4E51D8'
@@ -460,10 +425,9 @@ root1.resizable(width=False, height=False)
 
 Check = []
 Switches_radio = StringVar()
-Switches_radio.set('1') 
+Switches_radio.set('1')
 token = []
 text_dont_bat_Spelling=[]
-
 
 ############################################################################################################
 #____________________________________________________________________________#
@@ -473,7 +437,7 @@ text_box1= tkinter.scrolledtext.ScrolledText(root1,width=43, height=15)
 lab0= Label(root1,width =25,bg  = Background,fg = '#00FFFF',font = ( "Helvetica" , 10))
 #____________________________________________________________________________#
 radio1=Radiobutton(root1, text='RU',selectcolor = Background, bg  = Background,fg = Text_color,value='0',variable=Switches_radio,command = radio)
-radio2=Radiobutton(root1, text='ENG',selectcolor = Background , bg  = Background,fg = Text_color, value='1',variable=Switches_radio, command = radio) 
+radio2=Radiobutton(root1, text='ENG',selectcolor = Background , bg  = Background,fg = Text_color, value='1',variable=Switches_radio, command = radio)
 #____________________________________________________________________________#
 bat = Button(root1, text='STOP', width=52,fg = Text_color,bg  = Background, command = STOP)
 bat_copy = Button(root1,width =16, text='COPY',fg = Text_color,bg  = Background, command = copy)
@@ -481,13 +445,13 @@ bat_clear= Button(root1,width =17, text='X_X',fg = Text_color,bg  = Background, 
 bat_past = Button(root1,width =16,text='PASTE',fg = Text_color,bg  = Background, command = paste)
 bat_token = Button(root1, text='API Яндекс.Переводчик', width=52, command = Debugging_tasks,bg  = Background, fg = Text_color)
 bat_Spelling=Button(root1,width =52,text='\\/', fg = Text_color,bg  = Background, command = spl)
-dont_bat_Spelling=Button(root1,width =52,text='/\\',fg = Text_color,bg  = Background, command = spl_dont) 
+dont_bat_Spelling=Button(root1,width =52,text='/\\',fg = Text_color,bg  = Background, command = spl_dont)
 #____________________________________________________________________________#
-bat1 = Button(root1, text='START', width=15, command = START,bg  = Background, fg = Text_color, font = 'BOLD' ) 
+bat1 = Button(root1, text='START', width=15, command = START,bg  = Background, fg = Text_color, font = 'BOLD' )
 bat1.grid(row=0,column=0)
 #____________________________________________________________________________#
 text_token= Text(root1,width=45, height=1)
-import_texst = Button(root1,width =50,text='Save Token',fg = Text_color,bg  = Background, command = save_text)  
+import_texst = Button(root1,width =50,text='Save Token',fg = Text_color,bg  = Background, command = save_text)
 #____________________________________________________________________________#
 
 bat_t_Sp0= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text0)
@@ -497,10 +461,12 @@ bat_t_Sp3= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font 
 bat_t_Sp4= Button(root1,width=20,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text4)
 bat_t_Sp5= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text5)
 #____________________________________________________________________________#
-skrin_shot_batton = Button(root1, text='[O]', width=52, command = skrinshot,bg  = Background, fg = Text_color) 
+skrin_shot_batton = Button(root1, text='[F1]', width=52, command = skrinshot,bg  = Background, fg = Text_color)
 #____________________________________________________________________________#
 paint = Canvas(root1,width=root1.winfo_screenwidth(), height=root1.winfo_screenheight())
-
+#____________________________________________________________________________#
+root1.bind('<F1>',skrinshot_bid)
+#____________________________________________________________________________#
 START()
 root1.wm_attributes('-topmost',1)
 root1.mainloop()
