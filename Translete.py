@@ -14,7 +14,6 @@ import mss.tools
 import cv2
 import numpy
 
-
 ######################################################
 #https://github.com/UB-Mannheim/tesseract/wiki
 import pytesseract
@@ -75,6 +74,8 @@ def transelte():
 
 	else :
 		root1.after(1000, transelte)
+
+
 
 def spl():
 
@@ -310,6 +311,7 @@ def skrinshot_s():
 			root1.unbind('<B1-Motion>')
 			root1.unbind('<ButtonRelease-1>')
 			nonlocal x,y
+			nonlocal location_window
 			#########################################
 			x0,x_max = x,event.x
 			X =  x0-x_max
@@ -329,11 +331,12 @@ def skrinshot_s():
 
 			if x0 == 0 and y0 == 0:
 				paint.grid_forget()
-				START()
+				lab0.grid()
+				root1.geometry('+{}+{}'.format(location_window[0],location_window[1]))
 				root1.update()
 				root1.overrideredirect(0)
-				skrin_shot_batton['text'] = '[-]'
 				root1.update()
+				START()
 				return
 
 
@@ -345,7 +348,6 @@ def skrinshot_s():
 			#####################
 			paint.grid_forget()
 			lab0.grid()
-			nonlocal location_window
 			root1.geometry('+{}+{}'.format(location_window[0],location_window[1]))
 			root1.update()
 			root1.overrideredirect(0)
