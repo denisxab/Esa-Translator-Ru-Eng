@@ -362,6 +362,7 @@ def skrinshot_s():
 				a = pytesseract.image_to_string(img,lang='eng')
 				if a != '':
 					skrin_shot_batton['text'] = '[+]'
+					Switches_radio.set('0')
 					text_box.delete(1.0, END)
 					text_box.insert(INSERT,str(a))
 					try:
