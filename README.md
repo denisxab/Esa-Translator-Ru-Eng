@@ -3,9 +3,13 @@ I tried to make the most minimalistic and convenient translator for PC from Russ
 
 Download version with screen translator
 https://www.dropbox.com/s/0w0106w0usjjder/0.5.1.Translator.rar?dl=0
+
+Author - https://vk.com/sasiska20
 ----------------------------------------------------------------------------------------------------------------------------------
 Я постарался сделать максимально минималистичный и удобный переводчик для ПК с русского на английский.Яндекс переводчик API используется для каталога, поэтому для исполнителя нужно создать токен по ссылке https://tech.yandex.ru/translate/
 
 
 Скачать версию с экранным переводчиком
 https://www.dropbox.com/s/0w0106w0usjjder/0.5.1.Translator.rar?dl=0
+
+Авто - https://vk.com/sasiska20
