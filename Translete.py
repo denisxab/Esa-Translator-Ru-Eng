@@ -332,11 +332,13 @@ def skrinshot_s():
 			if x0 == 0 and y0 == 0:
 				paint.grid_forget()
 				lab0.grid()
+				lab0['width']=45
 				root1.geometry('+{}+{}'.format(location_window[0],location_window[1]))
 				root1.update()
 				root1.overrideredirect(0)
 				root1.update()
 				START()
+				lab0['width']=25
 				return
 
 
@@ -348,11 +350,13 @@ def skrinshot_s():
 			#####################
 			paint.grid_forget()
 			lab0.grid()
+			lab0['width']=45
 			root1.geometry('+{}+{}'.format(location_window[0],location_window[1]))
 			root1.update()
 			root1.overrideredirect(0)
 			root1.update()
 			START()
+			lab0['width']=25
 			#####################
 			try:
 				a = pytesseract.image_to_string(img,lang='eng')
@@ -431,6 +435,9 @@ Switches_radio.set('1')
 token = []
 text_dont_bat_Spelling=[]
 
+
+
+
 ############################################################################################################
 #____________________________________________________________________________#
 text_box = tkinter.scrolledtext.ScrolledText(root1,width=43, height=15)
@@ -470,6 +477,7 @@ paint = Canvas(root1,width=root1.winfo_screenwidth(), height=root1.winfo_screenh
 root1.bind('<F1>',skrinshot_bid)
 #____________________________________________________________________________#
 START()
+
 root1.wm_attributes('-topmost',1)
 root1.mainloop()
 ############################################################################################################
