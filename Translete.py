@@ -42,10 +42,6 @@ def test_token(token):
 		text_box1.insert(INSERT,'                 NO INTERNET')	
 
 
-
-
-
-
 def transelte():
 	def transelte_func (text,lang,token):
 		global Check
@@ -192,6 +188,8 @@ def radio():
 
 #------------------------------------#
 def STOP():
+	global globalF3
+	globalF3=[]
 	text_token.grid_forget()
 	import_texst.grid_forget()
 	text_box.grid_forget()
@@ -206,6 +204,7 @@ def STOP():
 	bat.grid_forget()
 	bat_Spelling.grid_forget()
 	dont_bat_Spelling.grid_forget()
+
 	bat_t_Sp0.grid_forget()
 	bat_t_Sp1.grid_forget()
 	bat_t_Sp2.grid_forget()
@@ -213,6 +212,7 @@ def STOP():
 	bat_t_Sp4.grid_forget()
 	bat_t_Sp5.grid_forget()
 	skrin_shot_batton.grid_forget()
+	skrin_shot_batton_AV.grid_forget()
 	bat1.grid(row=0,column=0)
 	#____________________________________________#
 
@@ -227,7 +227,8 @@ def START():
 	text_box.grid(columnspan=4,row=2,column=0)
 	text_box1.grid(columnspan=6,row=4,column=0)
 	bat_Spelling.grid(columnspan=4,row=5,column=0)
-	skrin_shot_batton.grid(columnspan=4,row=6,column=0)
+	skrin_shot_batton.grid(sticky=W,columnspan=4,row=6,column=0)
+	skrin_shot_batton_AV.grid(sticky=E,columnspan=4,row=6,column=0)
 	bat_token.grid(columnspan=4,row=7,column=0)
 	text_box.delete(1.0, END)
 	text_box1.delete(1.0, END)
@@ -251,6 +252,7 @@ def paste():
 	
 def copy():
 	pyperclip.copy(text_box1.get(1.0, 'end-1c'))
+	pass
 	
 def clear():
 	STOP()
@@ -283,7 +285,9 @@ def Debugging_tasks():
 #------------------------------------#
 def sending_text(text_sennd,NAME_TEXT):
 	a = (text_box.get(1.0, 'end-1c')).split(' ')
+
 	cash_text = a
+
 	i = -1
 	for x in a:
 		i+=1
@@ -294,6 +298,9 @@ def sending_text(text_sennd,NAME_TEXT):
 	text=''
 	i= len(cash_text)
 	io = 0
+
+
+
 	for y in cash_text:
 		if i == io+1:
 			text+=y
@@ -305,6 +312,8 @@ def sending_text(text_sennd,NAME_TEXT):
 	text_box.insert(INSERT,text)
 	spl_dont()
 	spl()
+
+
 def input_text0():
 	global text_dont_bat_Spelling
 	sending_text(text_dont_bat_Spelling[0],text_dont_bat_Spelling[6])
@@ -324,13 +333,32 @@ def input_text5():
 	global text_dont_bat_Spelling
 	sending_text(text_dont_bat_Spelling[5],text_dont_bat_Spelling[6])
 #------------------------------------#
-def skrinshot_s():
+def skrinshot_s(AVTO_S=0):
 
 	def exit_func(event=0):
 		nonlocal all_cord_mnogo
+		nonlocal Auto_capture
 		root1.unbind('<B1-Motion>')
 		root1.unbind('<ButtonRelease-1>')
 		root1.unbind('<F2>')
+
+
+		if Auto_capture == 1:
+			global globalF3
+			paint.grid_forget()
+			lab0.grid()
+			root1.geometry('+{}+{}'.format(location_window[0],location_window[1]))
+			root1.update()
+			root1.overrideredirect(0)
+			root1.update()
+			START()
+			lab0['width']=25
+			text_box.delete(1.0, END)
+			globalF3 = all_cord_mnogo
+			Tracking_S()
+			root1.bind('F1',skrinshot_bid)
+			return
+
 
 		imags = []
 		for x in all_cord_mnogo:
@@ -370,11 +398,14 @@ def skrinshot_s():
 				if a != '':
 					skrin_shot_batton['text'] = '[+]'
 					Switches_radio.set('0')
-					if i==0:
-						text_box.insert(INSERT,'{}\n'.format(a))
+
+					
+					if i == 0:
+						text_box.insert(INSERT,'{} '.format(a))
 
 					else:
-						text_box.insert(INSERT,'---------------------{}---------------------\n{}\n'.format(i+1,a))
+						text_box.insert(INSERT,'|====={}=====> {} '.format(i+1,a))
+
 					
 					i+=1
 
@@ -403,7 +434,7 @@ def skrinshot_s():
 				return
 
 
-
+		spl()
 
 		root1.bind('F1',skrinshot_bid)
 
@@ -448,7 +479,7 @@ def skrinshot_s():
 				return
 
 
-			rrr = (y0,x0,X,Y)
+			rrr = (y0,x0,X,Y,x_max,y_max)
 			all_cord_mnogo.append(rrr)
 			paint.create_rectangle(x_max,y_max, x0, y0, outline = 'blue',tag = str(x_max))
 
@@ -481,6 +512,12 @@ def skrinshot_s():
 	root1.geometry('+0+0')
 	root1.update()
 
+
+	Auto_capture = 0
+	if AVTO_S == 1:
+		Auto_capture = 1
+
+
 	x=y=0
 	all_cord_mnogo = []
 	root1.bind('<B1-Motion>',one)
@@ -488,12 +525,123 @@ def skrinshot_s():
 	root1.bind('<F2>',exit_func)
 
 
-
-
-
 def skrinshot_bid(event):
 	skrinshot_s()
-#------------------------------------#
+
+
+
+#------------- AVTO -----------------------#
+
+
+def Tracking_S():
+	global globalF3
+
+	text_box.delete(1.0, END)
+
+
+	imags = []
+
+	for xss in globalF3:
+
+		if xss[2] == 0 and xss[3] == 0:
+			continue
+
+
+		dc = win32gui.GetDC(0)
+		red = win32api.RGB(78, 81, 216)
+
+		for x in range(xss[2]):
+			win32gui.SetPixel(dc,xss[1]+x,xss[0],red) # UP
+			win32gui.SetPixel(dc,xss[1]+x,xss[5],red) # UP
+
+		for y in range(xss[3]):
+			win32gui.SetPixel(dc,xss[1],xss[0]+y,red) # UP
+			win32gui.SetPixel(dc,xss[4],xss[0]+y,red) # UP
+
+
+
+		with mss.mss() as sct:
+			monitor = {"top":xss[0], "left": xss[1], "width": xss[2], "height":xss[3]}
+			try:
+				img = cv2.resize(numpy.array(sct.grab(monitor)),(0,0),fx=10,fy=10)
+				img = cv2.GaussianBlur(img,(11,11),0)
+				imags.append(img)
+
+			except cv2.error:
+				continue
+
+
+	i=0
+
+	for y in imags:
+
+		try:
+			a = pytesseract.image_to_string(y,lang='eng')
+			if a != '':
+				skrin_shot_batton['text'] = '[+]'
+				Switches_radio.set('0')
+
+				
+				if i == 0:
+					text_box.insert(INSERT,'{} '.format(a))
+
+				else:
+					text_box.insert(INSERT,'|====={}=====> {} '.format(i+1,a))
+
+				
+				i+=1
+
+
+				try:
+					os.remove('except_photo{}.png'.format(i))
+				except FileNotFoundError:
+					pass
+			else:
+				skrin_shot_batton['text'] = '[-]'
+				cv2.imwrite('except_photo{}.png'.format(i), y)
+
+		except pytesseract.pytesseract.TesseractNotFoundError:
+			if 'tesseract-ocr.exe' in os.listdir():
+				os.system('tesseract-ocr.exe')
+				return
+
+			else:
+				text_box.delete(1.0, END)
+				text_box.insert(INSERT,'Для работы этой функции необходимо устоновить tesseract по ссылки\nhttps://github.com/UB-Mannheim/tesseract/wiki\nУкажите при устоновки следующий путь\nC:\\Program Files\\Tesseract-OCR')
+				return
+
+		except pytesseract.pytesseract.TesseractError:
+			text_box.delete(1.0, END)
+			text_box.insert(INSERT,'Выбраный язык не устоновлен - выберите этот язык при устоновки')
+			return
+
+
+		spl()
+
+
+
+
+
+
+
+
+def skrinshot_bid_AVS():
+	global globalF3
+	if globalF3 == []:
+		skrinshot_s(1)
+	else:
+		Tracking_S()
+
+
+
+def skrinshot_bid_AV(event):
+	skrinshot_bid_AVS()
+
+
+
+
+
+#------------------------------------------#
 ############################################################################################################
 
 
@@ -516,6 +664,7 @@ Switches_radio = StringVar()
 Switches_radio.set('1')
 token = []
 text_dont_bat_Spelling=[]
+globalF3 = []
 ############################################################################################################
 
 
@@ -552,11 +701,14 @@ bat_t_Sp3= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font 
 bat_t_Sp4= Button(root1,width=20,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text4)
 bat_t_Sp5= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text5)
 #____________________________________________________________________________#
-skrin_shot_batton = Button(root1, text='[F1]', width=52, command = skrinshot_s,bg  = Background, fg = Text_color)
+skrin_shot_batton = Button(root1, text='[F1]', width=26, command = skrinshot_s,bg  = Background, fg = Text_color)
+skrin_shot_batton_AV= Button(root1, text='[F3]', width=26, command = skrinshot_bid_AVS,bg  = Background, fg = Text_color)
+
 #____________________________________________________________________________#
 paint = Canvas(root1,width=root1.winfo_screenwidth(), height=root1.winfo_screenheight())
 #____________________________________________________________________________#
 root1.bind('<F1>',skrinshot_bid)
+root1.bind('<F3>',skrinshot_bid_AV)
 #____________________________________________________________________________#
 START()
 root1.wm_attributes('-topmost',1)
