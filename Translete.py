@@ -19,40 +19,61 @@ import numpy
 import pytesseract
 pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe' # выбрать файл с Tesseract-OCR
 ######################################################
+import sys
 
-
-
+############################################################################################################
 #------------------------------------#
 def test_token(token):
-	respons0 = requests.get('https://translate.yandex.net/api/v1.5/tr.json/translate', params={"key":token,
-			'text':'Привет мир !','format':'plain','lang':'en'})
-	if respons0.json()['code'] == 401:
-		lab0['text'] = ' - Token False -'
-		Debugging_tasks()
-		return 0
-	else:
+	try:
+		respons0 = requests.get('https://translate.yandex.net/api/v1.5/tr.json/translate', params={"key":token,
+				'text':'Привет мир !','format':'plain','lang':'en'})
+		if respons0.json()['code'] == 401:
+			lab0['text'] = ' - Token False -'
+			Debugging_tasks()
+			return 0
+		else:
+			radio()
+			transelte()
+
+	except requests.exceptions.ConnectionError:
 		radio()
 		transelte()
+		text_box1.delete(1.0, END)
+		text_box1.insert(INSERT,'                 NO INTERNET')	
+
+
+
+
+
 
 def transelte():
 	def transelte_func (text,lang,token):
+		global Check
 		if text != '':
-			global Check
+			try:
+				respons0 = requests.get('https://translate.yandex.net/api/v1.5/tr.json/translate', params={"key":token,'text':str(text),'format':'plain','lang':lang})
+				resiut = respons0.json()['text']
+				Check=text
+				return resiut
 
-			respons0 = requests.get('https://translate.yandex.net/api/v1.5/tr.json/translate', params={"key":token,'text':str(text),'format':'plain','lang':lang})
-			lab0['text'] = '||| ||| ||| ||| ||| ||| ||| ||| ||| ||| |||'
-			resiut = respons0.json()['text']
-			Check=text
+			except requests.exceptions.ConnectionError:
+				Check=text
+				return 'ER1*1*1*1*1'
 
-			return resiut
+		Check=text
+
+
+
+
+
 
 	global Check
 	global token
 
 	a = text_box.get(1.0, 'end-1c')
 	b = text_box1.get(1.0, END)
-	lab0['text'] = '--- --- --- --- --- --- --- --- --- --- ---'
 
+	lab0['text'] = '--- --- --- --- --- --- --- --- --- --- ---'
 
 	if a  != Check:
 		if Switches_radio.get() == '0':
@@ -63,12 +84,20 @@ def transelte():
 
 		resiut = transelte_func(a,lang,token)
 
-		if resiut != None:
+
+		if resiut == 'ER1*1*1*1*1':
+			lab0['text']='NO INTERNET'
+
+
+		elif resiut != None:
 			text_box1.delete(1.0, END)
-			text_box1.insert(INSERT,str(resiut[0]))
+			text_box1.insert(INSERT,str(resiut[0]))	
+			lab0['text'] = '||| ||| ||| ||| ||| ||| ||| ||| ||| ||| |||'
+
 
 		else :
 			text_box1.delete(1.0, END)
+
 
 		root1.after(500, transelte)
 
@@ -76,9 +105,7 @@ def transelte():
 		root1.after(1000, transelte)
 
 
-
 def spl():
-
 	def Spelling(text):
 		Chhelk = []
 		if Switches_radio.get() == '0':
@@ -186,8 +213,9 @@ def STOP():
 	bat_t_Sp4.grid_forget()
 	bat_t_Sp5.grid_forget()
 	skrin_shot_batton.grid_forget()
-	#____________________________________________#
 	bat1.grid(row=0,column=0)
+	#____________________________________________#
+
 def START():
 	bat.grid(columnspan=3,row=0,column=0)
 	bat_past.grid(sticky=W,columnspan=3,row=1,column=0)
@@ -220,13 +248,14 @@ def START():
 def paste():
 	a = pyperclip.paste()
 	text_box.insert(INSERT,str(a))
-	pass
+	
 def copy():
 	pyperclip.copy(text_box1.get(1.0, 'end-1c'))
-	pass
+	
 def clear():
 	STOP()
 	START()
+	
 def save_text():
 	if text_token.get(1.0, 'end-1c') == "  Введите Token Яндекс Api переводчик":
 		text_token.delete(1.0, END)
@@ -296,7 +325,92 @@ def input_text5():
 	sending_text(text_dont_bat_Spelling[5],text_dont_bat_Spelling[6])
 #------------------------------------#
 def skrinshot_s():
+
+	def exit_func(event=0):
+		nonlocal all_cord_mnogo
+		root1.unbind('<B1-Motion>')
+		root1.unbind('<ButtonRelease-1>')
+		root1.unbind('<F2>')
+
+		imags = []
+		for x in all_cord_mnogo:
+
+			if x[2] == 0 and x[3] == 0:
+				continue
+
+			with mss.mss() as sct:
+				monitor = {"top":x[0], "left": x[1], "width": x[2], "height":x[3]}
+				try:
+					img = cv2.resize(numpy.array(sct.grab(monitor)),(0,0),fx=10,fy=10)
+					img = cv2.GaussianBlur(img,(11,11),0)
+					imags.append(img)
+
+				except cv2.error:
+					continue
+
+
+
+
+
+		paint.grid_forget()
+		lab0.grid()
+		root1.geometry('+{}+{}'.format(location_window[0],location_window[1]))
+		root1.update()
+		root1.overrideredirect(0)
+		root1.update()
+		START()
+		lab0['width']=25
+		text_box.delete(1.0, END)
+
+
+		i=0
+		for y in imags:
+			try:
+				a = pytesseract.image_to_string(y,lang='eng')
+				if a != '':
+					skrin_shot_batton['text'] = '[+]'
+					Switches_radio.set('0')
+					if i==0:
+						text_box.insert(INSERT,'{}\n'.format(a))
+
+					else:
+						text_box.insert(INSERT,'---------------------{}---------------------\n{}\n'.format(i+1,a))
+					
+					i+=1
+
+
+					try:
+						os.remove('except_photo{}.png'.format(i))
+					except FileNotFoundError:
+						pass
+				else:
+					skrin_shot_batton['text'] = '[-]'
+					cv2.imwrite('except_photo{}.png'.format(i), y)
+
+			except pytesseract.pytesseract.TesseractNotFoundError:
+				if 'tesseract-ocr.exe' in os.listdir():
+					os.system('tesseract-ocr.exe')
+					return
+
+				else:
+					text_box.delete(1.0, END)
+					text_box.insert(INSERT,'Для работы этой функции необходимо устоновить tesseract по ссылки\nhttps://github.com/UB-Mannheim/tesseract/wiki\nУкажите при устоновки следующий путь\nC:\\Program Files\\Tesseract-OCR')
+					return
+
+			except pytesseract.pytesseract.TesseractError:
+				text_box.delete(1.0, END)
+				text_box.insert(INSERT,'Выбраный язык не устоновлен - выберите этот язык при устоновки')
+				return
+
+
+
+
+		root1.bind('F1',skrinshot_bid)
+
+
+
 	def one(event):
+
 		def paint_square(event):
 			nonlocal x,y
 			if x == 0 and y == 0:
@@ -308,10 +422,10 @@ def skrinshot_s():
 
 
 		if event.num == 1:
-			root1.unbind('<B1-Motion>')
-			root1.unbind('<ButtonRelease-1>')
+
 			nonlocal x,y
 			nonlocal location_window
+			nonlocal all_cord_mnogo
 			#########################################
 			x0,x_max = x,event.x
 			X =  x0-x_max
@@ -330,94 +444,61 @@ def skrinshot_s():
 			x=y=0
 
 			if x0 == 0 and y0 == 0:
-				paint.grid_forget()
-				lab0.grid()
-				lab0['width']=45
-				root1.geometry('+{}+{}'.format(location_window[0],location_window[1]))
-				root1.update()
-				root1.overrideredirect(0)
-				root1.update()
-				START()
-				lab0['width']=25
+				exit_func()
 				return
 
 
-			with mss.mss() as sct:
-				monitor = {"top":y0, "left": x0, "width": X, "height":Y}
-				img = cv2.resize(numpy.array(sct.grab(monitor)),(0,0),fx=10,fy=10)
-				img = cv2.GaussianBlur(img,(11,11),0)
+			rrr = (y0,x0,X,Y)
+			all_cord_mnogo.append(rrr)
+			paint.create_rectangle(x_max,y_max, x0, y0, outline = 'blue',tag = str(x_max))
 
-			#####################
-			paint.grid_forget()
-			lab0.grid()
-			lab0['width']=45
-			root1.geometry('+{}+{}'.format(location_window[0],location_window[1]))
-			root1.update()
-			root1.overrideredirect(0)
-			root1.update()
-			START()
-			lab0['width']=25
-			#####################
-			try:
-				a = pytesseract.image_to_string(img,lang='eng')
-				if a != '':
-					skrin_shot_batton['text'] = '[+]'
-					Switches_radio.set('0')
-					text_box.delete(1.0, END)
-					text_box.insert(INSERT,str(a))
-					try:
-						os.remove('except_photo.png')
-					except FileNotFoundError:
-						pass
-				else:
-					skrin_shot_batton['text'] = '[-]'
-					cv2.imwrite('except_photo.png', img)
 
-			except pytesseract.pytesseract.TesseractNotFoundError:
-				if 'tesseract-ocr.exe' in os.listdir():
-					os.system('tesseract-ocr.exe')
-				else:
-					text_box.delete(1.0, END)
-					text_box.insert(INSERT,'Для работы этой функции необходимо устоновить tesseract по ссылки\nhttps://github.com/UB-Mannheim/tesseract/wiki\nУкажите при устоновки следующий путь\nC:\\Program Files\\Tesseract-OCR')
-
-			except pytesseract.pytesseract.TesseractError:
-				text_box.delete(1.0, END)
-				text_box.insert(INSERT,'Выбраный язык не устоновлен - выберите этот язык при устоновки')
-
-			root1.bind('F1',skrinshot)
 
 		else:
 			paint_square(event)
 
 
+
+	root1.unbind('F1')
+	STOP()
+	bat1.grid_forget()
+	lab0.grid()
+	lab0['width']=45
+	lab0['text']='-------- [F2] --------'
+	root1.update()
+
+	with mss.mss() as sct:
+		monitor = {"top":0, "left": 0, "width": win32api.GetSystemMetrics(0), "height":win32api.GetSystemMetrics(1)}
+		mss.tools.to_png(sct.grab(monitor).rgb, sct.grab(monitor).size, output='photo_t.png')
+	lab0.grid_forget()
+	root1.overrideredirect(1)
+
 	global imgas
 	imgas = ImageTk.PhotoImage(Image.open('photo_t.png'))
 	paint.create_image(0,0, anchor=NW,image=imgas)
-	location_window = (root1.winfo_x(),root1.winfo_y())#(root1.winfo_screenwidth(),root1.winfo_screenheight())
+	location_window = (root1.winfo_x(),root1.winfo_y())
 	paint.grid()
 	root1.geometry('+0+0')
 	root1.update()
 
 	x=y=0
+	all_cord_mnogo = []
 	root1.bind('<B1-Motion>',one)
 	root1.bind('<ButtonRelease-1>',one)
+	root1.bind('<F2>',exit_func)
 
-def skrinshot():
-	root1.unbind('F1')
-	STOP()
-	root1.update()
-	with mss.mss() as sct:
-		monitor = {"top":0, "left": 0, "width": win32api.GetSystemMetrics(0), "height":win32api.GetSystemMetrics(1)}
-		mss.tools.to_png(sct.grab(monitor).rgb, sct.grab(monitor).size, output='photo_t.png')
-	bat1.grid_forget()
-	root1.overrideredirect(1)
-	skrinshot_s()
+
+
+
 
 def skrinshot_bid(event):
-	skrinshot()
+	skrinshot_s()
 #------------------------------------#
+############################################################################################################
 
 
+
+############################################################################################################
 Background ='#4E51D8'
 Text_color='#FFFFFF'
 root1=Tk()
@@ -435,7 +516,7 @@ Switches_radio = StringVar()
 Switches_radio.set('1')
 token = []
 text_dont_bat_Spelling=[]
-
+############################################################################################################
 
 
 
@@ -471,14 +552,13 @@ bat_t_Sp3= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font 
 bat_t_Sp4= Button(root1,width=20,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text4)
 bat_t_Sp5= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text5)
 #____________________________________________________________________________#
-skrin_shot_batton = Button(root1, text='[F1]', width=52, command = skrinshot,bg  = Background, fg = Text_color)
+skrin_shot_batton = Button(root1, text='[F1]', width=52, command = skrinshot_s,bg  = Background, fg = Text_color)
 #____________________________________________________________________________#
 paint = Canvas(root1,width=root1.winfo_screenwidth(), height=root1.winfo_screenheight())
 #____________________________________________________________________________#
 root1.bind('<F1>',skrinshot_bid)
 #____________________________________________________________________________#
 START()
-
 root1.wm_attributes('-topmost',1)
 root1.mainloop()
 ############################################################################################################
