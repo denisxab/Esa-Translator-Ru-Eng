@@ -286,6 +286,8 @@ def Debugging_tasks():
 def sending_text(text_sennd,NAME_TEXT):
 	a = (text_box.get(1.0, 'end-1c')).split(' ')
 
+	print(a)
+
 	cash_text = a
 
 	i = -1
@@ -404,7 +406,7 @@ def skrinshot_s(AVTO_S=0):
 						text_box.insert(INSERT,'{} '.format(a))
 
 					else:
-						text_box.insert(INSERT,'|====={}=====> {} '.format(i+1,a))
+						text_box.insert(INSERT,'\n\\/-------------{}-------------------\\/\n {} '.format(i+1,a))
 
 					
 					i+=1
@@ -586,7 +588,7 @@ def Tracking_S():
 					text_box.insert(INSERT,'{} '.format(a))
 
 				else:
-					text_box.insert(INSERT,'|====={}=====> {} '.format(i+1,a))
+					text_box.insert(INSERT,'\n\\/-------------{}-------------------\\/\n {} '.format(i+1,a))
 
 				
 				i+=1
@@ -617,10 +619,6 @@ def Tracking_S():
 
 
 		spl()
-
-
-
-
 
 
 
