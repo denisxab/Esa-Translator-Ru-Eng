@@ -18,6 +18,8 @@ https://www.dropbox.com/s/rl7ssfxw0dkek20/0.7.Translate.rar?dl=0
 
 
 Previous Versions
+
+
 https://www.dropbox.com/s/8xdzab1netjg9pa/0.6.Translate.rar?dl=0
 https://www.dropbox.com/s/k3poihgulgrssa4/0.5.2.Translate.rar?dl=0
 https://www.dropbox.com/s/0w0106w0usjjder/0.5.1.Translator.rar?dl=0
