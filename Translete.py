@@ -20,85 +20,133 @@ import pytesseract
 pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe' # выбрать файл с Tesseract-OCR
 ######################################################
 import sys
-
+import json
 ############################################################################################################
 #------------------------------------#
-def test_token(token):
-	try:
-		respons0 = requests.get('https://translate.yandex.net/api/v1.5/tr.json/translate', params={"key":token,
-				'text':'Привет мир !','format':'plain','lang':'en'})
-		if respons0.json()['code'] == 401:
-			lab0['text'] = ' - Token False -'
-			Debugging_tasks()
-			return 0
-		else:
-			radio()
-			transelte()
 
-	except requests.exceptions.ConnectionError:
-		radio()
-		transelte()
-		text_box1.delete(1.0, END)
-		text_box1.insert(INSERT,'                 NO INTERNET')	
+
+def Token_test():
+	global token
+	try:
+		with open('token_Y.txt','r') as tokens_txt:
+			token = tokens_txt.read()
+	except FileNotFoundError:
+		Debugging_tasks()
+
+
+def SAVE_OZ_Text(ТEXT,RESAU=False):
+	if scale.get()==2:
+		lab0['text'] = '<NO OFLAIN>'
+		return
+
+
+	if RESAU == False:
+		try:
+			with open('Saved_replies.json','r',encoding='utf-8') as JSon_R:
+				Jsons = json.load(JSon_R)
+				if not ТEXT in Jsons:
+					return False
+				if ТEXT in Jsons:
+					text_box1.delete(1.0, END)
+					text_box1.insert(INSERT,Jsons[Jsons.index(ТEXT)+1])
+					return True
+
+		except FileNotFoundError:
+			with open('Saved_replies.json','w',encoding='utf-8') as JSon_W:
+				json.dump([],JSon_W,sort_keys=False,ensure_ascii=False)
+
+
+	if RESAU != False:
+		if scale.get()==0:
+			with open('Saved_replies.json','r',encoding='utf-8') as JSon_R:
+				Jsons = json.load(JSon_R)
+				if not ТEXT in Jsons:
+					Jsons.append(ТEXT)
+					Jsons.append(RESAU[0])
+					JSon_R.close()
+					with open('Saved_replies.json','w',encoding='utf-8') as JSon_W:
+						json.dump(Jsons,JSon_W,sort_keys=False,ensure_ascii=False)
+					return False
+
+		elif scale.get()==1:
+			lab0['text'] = '<NO SAVE>'
+			return
+
+
+
 
 
 def transelte():
 	def transelte_func (text,lang,token):
-		global Check
 		if text != '':
 			try:
-				respons0 = requests.get('https://translate.yandex.net/api/v1.5/tr.json/translate', params={"key":token,'text':str(text),'format':'plain','lang':lang})
-				resiut = respons0.json()['text']
-				Check=text
-				return resiut
+				a =  requests.get('https://translate.yandex.net/api/v1.5/tr.json/translate', params={"key":token,'text':str(text),'format':'plain','lang':lang}).json()
+				if a['code'] == 200:
+					return a['text']
+				elif a['code'] == 401:
+					return 'API key is invalid'
 
 			except requests.exceptions.ConnectionError:
-				Check=text
 				return 'ER1*1*1*1*1'
-
-		Check=text
-
-
-
 
 
 
 	global Check
 	global token
 
+	
 	a = text_box.get(1.0, 'end-1c')
-	b = text_box1.get(1.0, END)
-
-	lab0['text'] = '--- --- --- --- --- --- --- --- --- --- ---'
-
-	if a  != Check:
-		if Switches_radio.get() == '0':
-			lang = 'ru'
-
-		if Switches_radio.get() == '1':
-			lang = 'en'
-
-		resiut = transelte_func(a,lang,token)
 
 
-		if resiut == 'ER1*1*1*1*1':
-			lab0['text']='NO INTERNET'
+	if a != Check:
+		lab0['text'] = '--- --- --- --- --- --- --- --- --- --- ---'
+		Check=a
+		OTV = SAVE_OZ_Text(a)
+		#_____________________________________________________$
+		if not OTV:
+
+			if Switches_radio.get() == '0':
+				resiut = transelte_func(a,'ru',token)
+			elif Switches_radio.get() == '1':
+				resiut = transelte_func(a,'en',token)
 
 
-		elif resiut != None:
-			text_box1.delete(1.0, END)
-			text_box1.insert(INSERT,str(resiut[0]))	
-			lab0['text'] = '||| ||| ||| ||| ||| ||| ||| ||| ||| ||| |||'
+			if resiut == 'ER1*1*1*1*1':
+				lab0['text']='NO INTERNET'
+				return
+			elif resiut == 'API key is invalid':
+				lab0['text'] = "НЕВЕРНЫЙ ТОКЕН"
+				Debugging_tasks()
+				return
+
+
+
+			elif resiut != None:
+				text_box1.delete(1.0, END)
+				text_box1.insert(INSERT,str(resiut[0]))
+				lab0['text'] = '||| ||| ||| ||| ||| ||| ||| ||| ||| ||| |||'
+				SAVE_OZ_Text(a,resiut)
+
+		#_____________________________________________________$
+		elif OTV:
+			lab0['text'] = '|+| |+| |+| {}kb |+| |+| |+|'.format(os.path.getsize('Saved_replies.json')//1024)
+		
 
 
 		else :
 			text_box1.delete(1.0, END)
 
 
-		root1.after(500, transelte)
 
-	else :
-		root1.after(1000, transelte)
+		root1.after(500, transelte)
+	root1.after(1000, transelte)
+
+
+
+
+
+
+
 
 
 def spl():
@@ -174,7 +222,7 @@ def spl_dont():
 	bat_t_Sp3.grid_forget()
 	bat_t_Sp4.grid_forget()
 	bat_t_Sp5.grid_forget()
-	bat_Spelling.grid(columnspan=4,row=5,column=0)
+	bat_Spelling.grid(columnspan=4,row=6,column=0)
 
 def radio():
 	if Switches_radio.get() == '0':
@@ -194,6 +242,7 @@ def STOP():
 	import_texst.grid_forget()
 	text_box.grid_forget()
 	bat_copy.grid_forget()
+	scale.grid_forget()
 	bat_clear.grid_forget()
 	bat_past.grid_forget()
 	text_box1.grid_forget()
@@ -204,7 +253,6 @@ def STOP():
 	bat.grid_forget()
 	bat_Spelling.grid_forget()
 	dont_bat_Spelling.grid_forget()
-
 	bat_t_Sp0.grid_forget()
 	bat_t_Sp1.grid_forget()
 	bat_t_Sp2.grid_forget()
@@ -217,77 +265,74 @@ def STOP():
 	#____________________________________________#
 
 def START():
-	bat.grid(columnspan=3,row=0,column=0)
-	bat_past.grid(sticky=W,columnspan=3,row=1,column=0)
-	bat_clear.grid(columnspan=3,row=1,column=0)
-	bat_copy.grid(sticky=E,columnspan=3,row=1,column=1)
-	radio1.grid(sticky=W,columnspan=3,row=3,column=0)
-	lab0.grid(columnspan=3,row=3,column=0)
-	radio2.grid(sticky=E,columnspan=3,row=3,column=1)
-	text_box.grid(columnspan=4,row=2,column=0)
-	text_box1.grid(columnspan=6,row=4,column=0)
-	bat_Spelling.grid(columnspan=4,row=5,column=0)
-	skrin_shot_batton.grid(sticky=W,columnspan=4,row=6,column=0)
-	skrin_shot_batton_AV.grid(sticky=E,columnspan=4,row=6,column=0)
-	bat_token.grid(columnspan=4,row=7,column=0)
+	bat.grid(columnspan=3,row=0,column=1)
+	bat_past.grid(sticky=W,columnspan=3,row=1,column=1)
+	bat_clear.grid(columnspan=3,row=1,column=1)
+	bat_copy.grid(sticky=E,columnspan=3,row=1,column=2)
+	text_box.grid(columnspan=4,row=2,column=1)
+	radio1.grid(sticky=W,columnspan=3,row=3,column=1)
+	lab0.grid(columnspan=3,row=3,column=1)
+	radio2.grid(sticky=E,columnspan=3,row=3,column=2)
+	scale.grid(columnspan =3,row=4,column=0)
+	text_box1.grid(columnspan=6,row=5,column=1)
+	bat_Spelling.grid(columnspan=4,row=6,column=1)
+	skrin_shot_batton.grid(sticky=W,columnspan=4,row=8,column=1)
+	skrin_shot_batton_AV.grid(sticky=E,columnspan=4,row=8,column=1)
+	bat_token.grid(columnspan=4,row=9,column=1)
 	text_box.delete(1.0, END)
 	text_box1.delete(1.0, END)
 	bat1.grid_forget()
 	#____________________________________________#
-	try:
-		with open('token_Y.txt','r') as file:
-			token_r = file.read()
-			global token
-			token.append(token_r)
+	Token_test()
+	transelte()
 
-		test_token(token)
 
-	except FileNotFoundError:
-		lab0['text'] = ' - Token False -'
-		Debugging_tasks()
 #------------------------------------#
 def paste():
-	a = pyperclip.paste()
-	text_box.insert(INSERT,str(a))
+	text_box.insert(INSERT,str(pyperclip.paste()))
 	
 def copy():
 	pyperclip.copy(text_box1.get(1.0, 'end-1c'))
-	pass
+	
 	
 def clear():
 	STOP()
 	START()
 	
 def save_text():
-	if text_token.get(1.0, 'end-1c') == "  Введите Token Яндекс Api переводчик":
+	if text_token.get(1.0, 'end-1c') == "     Введите Token Яндекс Api переводчик":
 		text_token.delete(1.0, END)
 
-	elif text_token.get(1.0, 'end-1c') == "               Token не работает":
+	elif text_token.get(1.0, 'end-1c') == "              Token не работает":
 		text_token.delete(1.0, END)
 
+	
 	else:
-		test = test_token(text_token.get(1.0, 'end-1c'))
-		if test != 0:
-			file = open('token_Y.txt','w')
-			file.write(text_token.get(1.0, 'end-1c'))
-			file.close()
+		test = requests.get('https://translate.yandex.net/api/v1.5/tr.json/translate', params={"key":text_token.get(1.0, 'end-1c'),'text':'Привет','format':'plain','lang':'ru'}).json()
+		if test['code'] == 200:
+			with open('token_Y.txt','w') as file:
+				file.write(text_token.get(1.0, 'end-1c'))
 			STOP()
 			START()
-		else:
+
+		elif test['code'] == 401:
 			text_token.delete(1.0, END)
-			text_token.insert(INSERT,"               Token не работает")
+			text_token.insert(INSERT,"              Token не работает")
+
+
+
 def Debugging_tasks():
 	bat_token.grid_forget()
 	skrin_shot_batton.grid_forget()
+	skrin_shot_batton_AV.grid_forget()
 	text_token.grid(columnspan=4,row=5,column=0)
 	text_token.insert(INSERT,"     Введите Token Яндекс Api переводчик")
 	import_texst.grid(columnspan=4,row=6,column=0)
+
+
 #------------------------------------#
 def sending_text(text_sennd,NAME_TEXT):
 	a = (text_box.get(1.0, 'end-1c')).split(' ')
-
-	print(a)
-
 	cash_text = a
 
 	i = -1
@@ -660,7 +705,7 @@ root1.resizable(width=False, height=False)
 Check = []
 Switches_radio = StringVar()
 Switches_radio.set('1')
-token = []
+token = ''
 text_dont_bat_Spelling=[]
 globalF3 = []
 ############################################################################################################
@@ -679,7 +724,7 @@ radio2=Radiobutton(root1, text='ENG',selectcolor = Background , bg  = Background
 #____________________________________________________________________________#
 bat = Button(root1, text='STOP', width=52,fg = Text_color,bg  = Background, command = STOP)
 bat_copy = Button(root1,width =16, text='COPY',fg = Text_color,bg  = Background, command = copy)
-bat_clear= Button(root1,width =17, text='X_X',fg = Text_color,bg  = Background, command = clear)
+bat_clear= Button(root1,width =18, text='X_X',fg = Text_color,bg  = Background, command = clear)
 bat_past = Button(root1,width =16,text='PASTE',fg = Text_color,bg  = Background, command = paste)
 bat_token = Button(root1, text='API Яндекс.Переводчик', width=52, command = Debugging_tasks,bg  = Background, fg = Text_color)
 bat_Spelling=Button(root1,width =52,text='\\/', fg = Text_color,bg  = Background, command = spl)
@@ -704,6 +749,7 @@ skrin_shot_batton_AV= Button(root1, text='[F3]', width=26, command = skrinshot_b
 
 #____________________________________________________________________________#
 paint = Canvas(root1,width=root1.winfo_screenwidth(), height=root1.winfo_screenheight())
+scale = Scale(root1, length=367,width=15,orient=HORIZONTAL,troughcolor=Background,activebackground=Background,relief=FLAT ,showvalue=0,sliderlength=52,from_=0, to=2,highlightbackground=Background,bg  = Background)
 #____________________________________________________________________________#
 root1.bind('<F1>',skrinshot_bid)
 root1.bind('<F3>',skrinshot_bid_AV)
