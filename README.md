@@ -3,7 +3,7 @@ I tried to make the most minimalistic and convenient translator for PC from Russ
 
 Download version with screen translator
 
-https://www.dropbox.com/s/rl7ssfxw0dkek20/0.7.Translate.rar?dl=0
+https://www.dropbox.com/s/qon95tczxyqeibg/0.7.1.Translate.rar?dl=0
 
 Author - https://vk.com/sasiska20
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -12,14 +12,14 @@ Author - https://vk.com/sasiska20
 
 Скачать версию с экранным переводчиком
 
-https://www.dropbox.com/s/rl7ssfxw0dkek20/0.7.Translate.rar?dl=0
+https://www.dropbox.com/s/qon95tczxyqeibg/0.7.1.Translate.rar?dl=0
 
 Авто - https://vk.com/sasiska20
 
 
-Previous Versions
+Previous Versions:
 
-
+https://www.dropbox.com/s/rl7ssfxw0dkek20/0.7.Translate.rar?dl=0
 https://www.dropbox.com/s/8xdzab1netjg9pa/0.6.Translate.rar?dl=0
 https://www.dropbox.com/s/k3poihgulgrssa4/0.5.2.Translate.rar?dl=0
 https://www.dropbox.com/s/0w0106w0usjjder/0.5.1.Translator.rar?dl=0
