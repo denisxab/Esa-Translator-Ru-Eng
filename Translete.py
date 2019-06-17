@@ -75,9 +75,6 @@ def SAVE_OZ_Text(ТEXT,RESAU=False):
 			 
 
 
-
-
-
 def transelte():
 	def transelte_func (text,lang,token):
 		if text != '':
@@ -100,12 +97,10 @@ def transelte():
 	a = text_box.get(1.0, 'end-1c')
 
 
-
-
 	if a != Check:
-		lab0['text'] = '--- --- --- --- --- --- --- --- --- --- ---'
+		Check=a
 		if a !='':
-			Check=a
+			lab0['text'] = '--- --- --- --- --- --- --- --- --- --- ---'
 			OTV = SAVE_OZ_Text(a)
 			#_____________________________________________________$
 			if not OTV:
@@ -157,28 +152,16 @@ def transelte():
 
 def spl():
 	def Spelling(text):
-		Chhelk = []
 		if Switches_radio.get() == '0':
 			lang = 'en'
 		if Switches_radio.get() == '1':
 			lang = 'ru'
 
-		texts = text.split(' ')
 
-		text_str=''
-		i= len(texts)
-		io = 0
-		for y in texts:
-			if i == io+1:
-				text_str+=y
-			else:
-				text_str+=y+' '
-			io+=1
-
-		respons_Spelling= requests.get('https://speller.yandex.net/services/spellservice.json/checkText?', params={'text':text_str,'lang':lang})
-		if respons_Spelling.json() !=[]:
-			Chhelk.append(respons_Spelling.json()[0]['word'])
-			Chhelk.append(respons_Spelling.json()[0]['s'])
+		respons_Spelling= requests.get('https://speller.yandex.net/services/spellservice.json/checkText?', params={'text':text,'lang':lang}).json()
+		if respons_Spelling != []:
+			Chhelk=[respons_Spelling[0]['word']]
+			Chhelk.append(respons_Spelling[0]['s'])
 			return Chhelk
 
 
@@ -188,9 +171,11 @@ def spl():
 	dont_bat_Spelling.grid(columnspan=4,row=7,column=0)
 	Chhelk = Spelling(text_box.get(1.0, 'end-1c'))
 
+	# Приве мир я умнек обайдешся ты тут
+
 	try:
-		dont_bat_Spelling['text']=Chhelk[0]
 		global text_dont_bat_Spelling
+		dont_bat_Spelling['text']=Chhelk[0]
 		for x in range(6):
 			try:
 				text_dont_bat_Spelling.append(Chhelk[1][x])
@@ -198,12 +183,8 @@ def spl():
 				text_dont_bat_Spelling.append('-')
 
 		text_dont_bat_Spelling.append(Chhelk[0])
-		bat_t_Sp0['text']=text_dont_bat_Spelling[0]
-		bat_t_Sp1['text']=text_dont_bat_Spelling[1]
-		bat_t_Sp2['text']=text_dont_bat_Spelling[2]
-		bat_t_Sp3['text']=text_dont_bat_Spelling[3]
-		bat_t_Sp4['text']=text_dont_bat_Spelling[4]
-		bat_t_Sp5['text']=text_dont_bat_Spelling[5]
+		bat_t_Sp0['text'],bat_t_Sp1['text'],bat_t_Sp2['text']=text_dont_bat_Spelling[0],text_dont_bat_Spelling[1],text_dont_bat_Spelling[2]
+		bat_t_Sp3['text'],bat_t_Sp4['text'],bat_t_Sp5['text']=text_dont_bat_Spelling[3],text_dont_bat_Spelling[4],text_dont_bat_Spelling[5]
 
 		bat_t_Sp0.grid(sticky=W,columnspan=3,row=9,column=0)
 		bat_t_Sp1.grid(columnspan=3,row=9,column=0)
@@ -291,15 +272,14 @@ def START():
 	#____________________________________________#
 	Token_test()
 	transelte()
-
-
 #------------------------------------#
 def paste():
 	text_box.insert(INSERT,str(pyperclip.paste()))
+	pass
 	
 def copy():
 	pyperclip.copy(text_box1.get(1.0, 'end-1c'))
-	
+	pass
 	
 def clear():
 	STOP()
@@ -325,8 +305,6 @@ def save_text():
 			text_token.delete(1.0, END)
 			text_token.insert(INSERT,"              Token не работает")
 
-
-
 def Debugging_tasks():
 	bat_token.grid_forget()
 	skrin_shot_batton.grid_forget()
@@ -334,37 +312,24 @@ def Debugging_tasks():
 	text_token.grid(columnspan=4,row=5,column=0)
 	text_token.insert(INSERT,"     Введите Token Яндекс Api переводчик")
 	import_texst.grid(columnspan=4,row=6,column=0)
-
-
 #------------------------------------#
 def sending_text(text_sennd,NAME_TEXT):
-	a = (text_box.get(1.0, 'end-1c')).split(' ')
-	cash_text = a
-
-	i = -1
-	for x in a:
-		i+=1
+	cash_text = (text_box.get(1.0, 'end-1c')).split(' ')
+	# print(text_sennd) # TREY
+	# print(cash_text) # 
+	# print(NAME_TEXT) # основной текст
+	for x in text_box.get(1.0, 'end-1c').split(' '):
 		if x == NAME_TEXT:
+			i=cash_text.index(x)
 			cash_text.pop(i)
 			cash_text.insert(i,text_sennd)
-
-	text=''
-	i= len(cash_text)
-	io = 0
-
-
-
-	for y in cash_text:
-		if i == io+1:
-			text+=y
-		else:
-			text+=y+' '
-		io+=1
-
+	# print(cash_text)
 	text_box.delete(1.0, END)
-	text_box.insert(INSERT,text)
+	text_box.insert(INSERT,' '.join(cash_text))
 	spl_dont()
 	spl()
+
+
 
 
 def input_text0():
