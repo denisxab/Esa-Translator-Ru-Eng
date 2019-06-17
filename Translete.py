@@ -39,38 +39,40 @@ def SAVE_OZ_Text(ТEXT,RESAU=False):
 		lab0['text'] = '<NO OFLAIN>'
 		return
 
+	elif scale.get()==1:
+		lab0['text'] = '<NO SAVE>'
+		return
 
-	if RESAU == False:
+
+	elif RESAU == False:
 		try:
 			with open('Saved_replies.json','r',encoding='utf-8') as JSon_R:
 				Jsons = json.load(JSon_R)
 				if not ТEXT in Jsons:
 					return False
-				if ТEXT in Jsons:
+				elif ТEXT in Jsons:
 					text_box1.delete(1.0, END)
-					text_box1.insert(INSERT,Jsons[Jsons.index(ТEXT)+1])
+					text_box1.insert(INSERT,Jsons[ТEXT])
 					return True
 
 		except FileNotFoundError:
 			with open('Saved_replies.json','w',encoding='utf-8') as JSon_W:
-				json.dump([],JSon_W,sort_keys=False,ensure_ascii=False)
+				json.dump({},JSon_W,sort_keys=False,ensure_ascii=False)
 
 
-	if RESAU != False:
+	elif RESAU != False:
 		if scale.get()==0:
 			with open('Saved_replies.json','r',encoding='utf-8') as JSon_R:
 				Jsons = json.load(JSon_R)
 				if not ТEXT in Jsons:
-					Jsons.append(ТEXT)
-					Jsons.append(RESAU[0])
+					Jsons[ТEXT]=RESAU[0]
 					JSon_R.close()
 					with open('Saved_replies.json','w',encoding='utf-8') as JSon_W:
 						json.dump(Jsons,JSon_W,sort_keys=False,ensure_ascii=False)
 					return False
 
-		elif scale.get()==1:
-			lab0['text'] = '<NO SAVE>'
-			return
+
+			 
 
 
 
@@ -84,7 +86,7 @@ def transelte():
 				if a['code'] == 200:
 					return a['text']
 				elif a['code'] == 401:
-					return 'API key is invalid'
+					return '#401##401#'
 
 			except requests.exceptions.ConnectionError:
 				return 'ER1*1*1*1*1'
@@ -98,39 +100,41 @@ def transelte():
 	a = text_box.get(1.0, 'end-1c')
 
 
+
+
 	if a != Check:
 		lab0['text'] = '--- --- --- --- --- --- --- --- --- --- ---'
-		Check=a
-		OTV = SAVE_OZ_Text(a)
-		#_____________________________________________________$
-		if not OTV:
-
-			if Switches_radio.get() == '0':
-				resiut = transelte_func(a,'ru',token)
-			elif Switches_radio.get() == '1':
-				resiut = transelte_func(a,'en',token)
-
-
-			if resiut == 'ER1*1*1*1*1':
-				lab0['text']='NO INTERNET'
-				return
-			elif resiut == 'API key is invalid':
-				lab0['text'] = "НЕВЕРНЫЙ ТОКЕН"
-				Debugging_tasks()
-				return
+		if a !='':
+			Check=a
+			OTV = SAVE_OZ_Text(a)
+			#_____________________________________________________$
+			if not OTV:
+				if Switches_radio.get() == '0':
+					lang = 'ru'
+				elif Switches_radio.get() == '1':
+					lang = 'en'
 
 
+				resiut = transelte_func(a,lang,token)
 
-			elif resiut != None:
-				text_box1.delete(1.0, END)
-				text_box1.insert(INSERT,str(resiut[0]))
-				lab0['text'] = '||| ||| ||| ||| ||| ||| ||| ||| ||| ||| |||'
-				SAVE_OZ_Text(a,resiut)
 
-		#_____________________________________________________$
-		elif OTV:
-			lab0['text'] = '|+| |+| |+| {}kb |+| |+| |+|'.format(os.path.getsize('Saved_replies.json')//1024)
-		
+				if resiut == 'ER1*1*1*1*1':
+					lab0['text']='NO INTERNET'
+					return
+				elif resiut == '#401##401#':
+					lab0['text'] = "НЕВЕРНЫЙ ТОКЕН"
+					Debugging_tasks()
+					return
+
+				elif resiut != None:
+					text_box1.delete(1.0, END)
+					text_box1.insert(INSERT,str(resiut[0]))
+					lab0['text'] = '||| ||| ||| ||| ||| ||| ||| ||| ||| ||| |||'
+					SAVE_OZ_Text(a,resiut)
+
+			#_____________________________________________________$
+			elif OTV:
+				lab0['text'] = '|+| |+| |+| {}kb |+| |+| |+|'.format(os.path.getsize('Saved_replies.json')//1024)
 
 
 		else :
@@ -139,6 +143,8 @@ def transelte():
 
 
 		root1.after(500, transelte)
+
+
 	root1.after(1000, transelte)
 
 
