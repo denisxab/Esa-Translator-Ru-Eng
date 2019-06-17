@@ -8,6 +8,7 @@ import win32api
 import win32gui
 
 from PIL import Image,ImageTk
+from re import findall,compile
 import mss
 import mss.tools
 import cv2
@@ -16,6 +17,7 @@ import numpy
 import os
 import sys
 import json
+
 
 ######################################################
 #https://github.com/UB-Mannheim/tesseract/wiki
@@ -86,9 +88,8 @@ def transelte():
 
 	if a != Check:
 		Check=a
+		lab0['text'] = '--- --- --- --- --- --- --- --- --- --- ---'
 		if a !='':
-			lab0['text'] = '--- --- --- --- --- --- --- --- --- --- ---'
-
 			OTV = SAVE_OZ_Text(a)
 			#_____________________________________________________$
 			if not OTV:
@@ -188,13 +189,14 @@ def START():
 	bat1.grid_forget()
 	#____________________________________________#
 	Token_test()
+	lab0['text'] = '--- --- ESA - Translate  --- ---'
 	transelte()
 #---------------- Utilities  --------------------#
 
 def paste():
 	text_box.insert(INSERT,str(pyperclip.paste()))
-	pass
-	
+	spl()
+		
 def copy():
 	pyperclip.copy(text_box1.get(1.0, 'end-1c'))
 	pass
@@ -252,6 +254,7 @@ def spl():
 			lang = 'ru'
 
 
+		text = ' '.join(re.findall(re.compile('[A-Za-z0-9а-яА-Я]+'), text))
 		respons_Spelling= requests.get('https://speller.yandex.net/services/spellservice.json/checkText?', params={'text':text,'lang':lang}).json()
 		if respons_Spelling != []:
 			Chhelk=[respons_Spelling[0]['word']]
@@ -265,7 +268,6 @@ def spl():
 	dont_bat_Spelling.grid(columnspan=4,row=7,column=0)
 	Chhelk = Spelling(text_box.get(1.0, 'end-1c'))
 
-	# Приве мир я умнек обайдешся ты тут
 
 	try:
 		global text_dont_bat_Spelling
@@ -306,9 +308,10 @@ def spl_dont():
 	bat_Spelling.grid(columnspan=4,row=6,column=0)
 
 def sending_text(text_sennd,NAME_TEXT):
-	cash_text = (text_box.get(1.0, 'end-1c')).split(' ')
+	#  Првие. умнек, как дила,
 
-	for x in text_box.get(1.0, 'end-1c').split(' '):
+	cash_text = re.findall(re.compile('[A-Za-z0-9а-яА-Я]+'), text_box.get(1.0, 'end-1c'))
+	for x in re.findall(re.compile('[A-Za-z0-9а-яА-Я]+'), text_box.get(1.0, 'end-1c')):
 		if x == NAME_TEXT:
 			i=cash_text.index(x)
 			cash_text.pop(i)
@@ -630,6 +633,7 @@ def skrinshot_bid_AVS():
 
 def skrinshot_bid_AV(event):
 	skrinshot_bid_AVS()
+	pass
 
 #------------------------------------------#
 ###################################################################################################################
@@ -656,47 +660,47 @@ globalF3 = []
 
 #####################################################################################################################
 ############################################## TKINTER ##############################################################
-#____________________________________________________________________________#
 text_box = tkinter.scrolledtext.ScrolledText(root1,width=43, height=15)
 text_box1= tkinter.scrolledtext.ScrolledText(root1,width=43, height=15)
-#____________________________________________________________________________#
+#__________________________________________________________________________________________________________#
 lab0= Label(root1,width =25,bg  = Background,fg = '#00FFFF',font = ( "Helvetica" , 10))
-#____________________________________________________________________________#
+#__________________________________________________________________________________________________________#
 radio1=Radiobutton(root1, text='RU',selectcolor = Background, bg  = Background,fg = Text_color,value='0',variable=Switches_radio,command = radio)
 radio2=Radiobutton(root1, text='ENG',selectcolor = Background , bg  = Background,fg = Text_color, value='1',variable=Switches_radio, command = radio)
-#____________________________________________________________________________#
-bat = Button(root1, text='STOP', width=52,fg = Text_color,bg  = Background, command = STOP)
-bat_copy = Button(root1,width =16, text='COPY',fg = Text_color,bg  = Background, command = copy)
-bat_clear= Button(root1,width =18, text='X_X',fg = Text_color,bg  = Background, command = clear)
-bat_past = Button(root1,width =16,text='PASTE',fg = Text_color,bg  = Background, command = paste)
-bat_token = Button(root1, text='API Яндекс.Переводчик', width=52, command = Debugging_tasks,bg  = Background, fg = Text_color)
-bat_Spelling=Button(root1,width =52,text='\\/', fg = Text_color,bg  = Background, command = spl)
-dont_bat_Spelling=Button(root1,width =52,text='/\\',fg = Text_color,bg  = Background, command = spl_dont)
-#____________________________________________________________________________#
-bat1 = Button(root1, text='START', width=15, command = START,bg  = Background, fg = Text_color, font = 'BOLD' )
+#__________________________________________________________________________________________________________#
+bat = Button(root1,width=52, text='STOP', fg = Text_color,bg  = Background, command = STOP)
+bat_copy = Button(root1,width=16, text='COPY', fg = Text_color,bg  = Background, command = copy)
+bat_clear = Button(root1,width=18, text='X_X',  fg = Text_color,bg  = Background, command = clear)
+bat_past = Button(root1,width=16, text='PASTE',fg = Text_color,bg  = Background, command = paste)
+
+bat_token = Button(root1,width=52, text='API Яндекс.Переводчик',fg = Text_color, bg  = Background, command = Debugging_tasks)
+bat_Spelling = Button(root1,width=52, text='\\/', fg = Text_color, bg  = Background, command = spl)
+dont_bat_Spelling = Button(root1,width=52, text='/\\', fg = Text_color, bg  = Background, command = spl_dont)
+#__________________________________________________________________________________________________________#
+bat1 = Button(root1, width=15,text='START',  command = START,bg  = Background, fg = Text_color, font = 'BOLD' )
 bat1.grid(row=0,column=0)
-#____________________________________________________________________________#
-text_token= Text(root1,width=45, height=1)
+#__________________________________________________________________________________________________________#
+text_token = Text(root1,width=45, height=1)
 import_texst = Button(root1,width =50,text='Save Token',fg = Text_color,bg  = Background, command = save_text)
-#____________________________________________________________________________#
+#__________________________________________________________________________________________________________#
 
-bat_t_Sp0= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text0)
-bat_t_Sp1= Button(root1,width=20,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text1)
-bat_t_Sp2= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text2)
-bat_t_Sp3= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text3)
-bat_t_Sp4= Button(root1,width=20,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text4)
-bat_t_Sp5= Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text5)
-#____________________________________________________________________________#
-skrin_shot_batton = Button(root1, text='[F1]', width=26, command = skrinshot_s,bg  = Background, fg = Text_color)
-skrin_shot_batton_AV= Button(root1, text='[F3]', width=26, command = skrinshot_bid_AVS,bg  = Background, fg = Text_color)
+bat_t_Sp0 = Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text0)
+bat_t_Sp1 = Button(root1,width=20,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text1)
+bat_t_Sp2 = Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text2)
+bat_t_Sp3 = Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text3)
+bat_t_Sp4 = Button(root1,width=20,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text4)
+bat_t_Sp5 = Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text5)
+#__________________________________________________________________________________________________________#
+skrin_shot_batton   = Button(root1, text='[F1]', width=26,bg = Background, fg = Text_color, command = skrinshot_s)
+skrin_shot_batton_AV= Button(root1, text='[F3]', width=26,bg = Background, fg = Text_color, command = skrinshot_bid_AVS)
 
-#____________________________________________________________________________#
+#__________________________________________________________________________________________________________#
 paint = Canvas(root1,width=root1.winfo_screenwidth(), height=root1.winfo_screenheight())
 scale = Scale(root1, length=367,width=15,orient=HORIZONTAL,troughcolor=Background,activebackground=Background,relief=FLAT ,showvalue=0,sliderlength=52,from_=0, to=2,highlightbackground=Background,bg  = Background)
-#____________________________________________________________________________#
+#__________________________________________________________________________________________________________#
 root1.bind('<F1>',skrinshot_bid)
 root1.bind('<F3>',skrinshot_bid_AV)
-#____________________________________________________________________________#
+#__________________________________________________________________________________________________________#
 START()
 root1.wm_attributes('-topmost',1)
 root1.mainloop()
