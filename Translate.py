@@ -217,9 +217,10 @@ def Debugging_tasks():
 	bat_token.grid_forget()
 	skrin_shot_batton.grid_forget()
 	skrin_shot_batton_AV.grid_forget()
-	text_token.grid(columnspan=4,row=5,column=0)
+	bat_Spelling.grid_forget()
+	text_token.grid(columnspan=4,row=7,column=0)
 	text_token.insert(INSERT,"     Введите Token Яндекс Api переводчик")
-	import_texst.grid(columnspan=4,row=6,column=0)
+	import_texst.grid(columnspan=4,row=8,column=0)
 
 def save_text():
 	if text_token.get(1.0, 'end-1c') == "     Введите Token Яндекс Api переводчик":
