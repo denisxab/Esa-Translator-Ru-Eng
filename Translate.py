@@ -1,28 +1,50 @@
-import requests
-from tkinter import *
-import tkinter.scrolledtext
-
-import pyperclip
-
-import win32api
-import win32gui
-
-from PIL import Image,ImageTk
-from re import findall,compile
-import mss
-import mss.tools
-import cv2
-import numpy
-
 import os
 import sys
 import json
+from tkinter import *
+import tkinter.scrolledtext
+from re import findall,compile
 
-
+try:
+	import requests
+except:
+	os.system('pip3 install requests')
+try:
+	import pyperclip
+except:
+	os.system('pip3 install re')
+try:
+	import win32api
+except:
+	os.system('pip3 install pypiwin32')
+try:
+	import win32gui
+except:
+	os.system('pip3 install win32gui')
+try:
+	from PIL import Image,ImageTk
+except:
+	os.system('pip3 install Pillow')
+try:
+	import mss
+	import mss.tools
+except:
+	os.system('pip3 install mss')
+try:
+	import cv2
+except:
+	os.system('pip3 install opencv-python')
+try:
+	import numpy
+except:
+	os.system('pip3 install numpy')
 ######################################################
 #https://github.com/UB-Mannheim/tesseract/wiki
-import pytesseract
-pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe' # выбрать файл с Tesseract-OCR
+try:
+	import pytesseract
+	pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe' # выбрать файл с Tesseract-OCR
+except:
+	os.system('pip3 install pytesseract')
 ######################################################
 
 ############################################################################################################
