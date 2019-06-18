@@ -700,10 +700,40 @@ def skrinshot_bid_AV(event):
 
 #------------------------------------------#
 ###################################################################################################################
+
+def General_settings():
+	try:
+		global Background
+		global Text_color
+		global dimensions
+		with open('General_settings.txt','r') as Files:
+			fils = Files.read().split('\n')
+			Background=fils[0]
+			Text_color=fils[1]
+			dimensions.append(fils[2])
+			dimensions.append(fils[3])
+	
+	except FileNotFoundError:
+		with open('General_settings.txt','w') as Files:
+			Files.write('#4E51D8\n')
+			Files.write('#FFFFFF\n')
+			Files.write('15\n')
+			Files.write('15\n')
+
+		General_settings()
+
 ############################################ Total ################################################################
 
-Background ='#4E51D8'
-Text_color='#FFFFFF'
+Background =''
+Text_color=''
+token = ''
+Check = []
+text_dont_bat_Spelling=[]
+globalF3 = []
+dimensions = []
+General_settings()
+
+
 root1=Tk()
 try:
 	root1.iconbitmap('icos.ico')
@@ -715,19 +745,16 @@ root1["bg"] = Background
 # root1.resizable(width=False, height=False)
 Switches_radio = StringVar()
 Switches_radio.set('1')
-token = ''
-Check = []
-text_dont_bat_Spelling=[]
-globalF3 = []
 
+print(dimensions)
 #####################################################################################################################
 ############################################## TKINTER ##############################################################
-text_box = tkinter.scrolledtext.ScrolledText(root1,width=43, height=15)
-text_box1= tkinter.scrolledtext.ScrolledText(root1,width=43, height=15)
+text_box = tkinter.scrolledtext.ScrolledText(root1,width=43, height=dimensions[0])
+text_box1= tkinter.scrolledtext.ScrolledText(root1,width=43, height=dimensions[1])
 #__________________________________________________________________________________________________________#
 frame0 = Frame(root1)
 bat_copy = Button(frame0,width=16, text='COPY', fg = Text_color,bg  = Background, command = copy)
-bat_clear = Button(frame0,width=18, text='X_X',  fg = Text_color,bg  = Background, command = clear)
+bat_clear = Button(frame0,width=16, text='X_X',  fg = Text_color,bg  = Background, command = clear)
 bat_past = Button(frame0,width=16, text='PASTE',fg = Text_color,bg  = Background, command = paste)
 #__________________________________________________________________________________________________________#
 frame1 = Frame(root1)
@@ -748,12 +775,12 @@ import_texst = Button(root1,width =50,text='Save Token',fg = Text_color,bg  = Ba
 #__________________________________________________________________________________________________________#
 frame2 = Frame(root1)
 bat_t_Sp0 = Button(frame2,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text0)
-bat_t_Sp1 = Button(frame2,width=20,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text1)
+bat_t_Sp1 = Button(frame2,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text1)
 bat_t_Sp2 = Button(frame2,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text2)
 #__________________________________________________________________________________________________________#
 frame21 = Frame(root1)
 bat_t_Sp3 = Button(frame21,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text3)
-bat_t_Sp4 = Button(frame21,width=20,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text4)
+bat_t_Sp4 = Button(frame21,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text4)
 bat_t_Sp5 = Button(frame21,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text5)
 #__________________________________________________________________________________________________________#
 frame3 = Frame(root1)
