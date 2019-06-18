@@ -3,7 +3,8 @@ I tried to make the most minimalistic and convenient translator for PC from Russ
 
 Download version with screen translator
 
-https://www.dropbox.com/s/ieowgi2b34e5ov8/0.7.2.Translate.rar?dl=0
+https://yadi.sk/d/hkbLMZfK_kzOiA
+https://www.dropbox.com/s/zz49ghc41yrrv8e/0.7.3.Translate.rar?dl=0
 
 
 Author - https://vk.com/sasiska20
@@ -13,7 +14,8 @@ Author - https://vk.com/sasiska20
 
 Скачать версию с экранным переводчиком
 
-https://www.dropbox.com/s/ieowgi2b34e5ov8/0.7.2.Translate.rar?dl=0
+https://yadi.sk/d/hkbLMZfK_kzOiA
+https://www.dropbox.com/s/zz49ghc41yrrv8e/0.7.3.Translate.rar?dl=0
 
 Авто - https://vk.com/sasiska20
 
