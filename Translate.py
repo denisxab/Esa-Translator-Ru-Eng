@@ -5,14 +5,16 @@ from tkinter import *
 import tkinter.scrolledtext
 from re import findall,compile
 
+
 try:
 	import requests
 except:
+	os.system('python -m pip install --upgrade pip')
 	os.system('pip3 install requests')
 try:
 	import pyperclip
 except:
-	os.system('pip3 install re')
+	os.system('pip3 install pyperclip')
 try:
 	import win32api
 except:
@@ -165,51 +167,71 @@ def radio():
 def STOP():
 	global globalF3
 	globalF3=[]
-	text_token.grid_forget()
-	import_texst.grid_forget()
-	text_box.grid_forget()
-	bat_copy.grid_forget()
-	scale.grid_forget()
-	bat_clear.grid_forget()
-	bat_past.grid_forget()
-	text_box1.grid_forget()
-	lab0.grid_forget ()
-	bat_token.grid_forget()
-	radio1.grid_forget()
-	radio2.grid_forget()
-	bat.grid_forget()
-	bat_Spelling.grid_forget()
-	dont_bat_Spelling.grid_forget()
-	bat_t_Sp0.grid_forget()
-	bat_t_Sp1.grid_forget()
-	bat_t_Sp2.grid_forget()
-	bat_t_Sp3.grid_forget()
-	bat_t_Sp4.grid_forget()
-	bat_t_Sp5.grid_forget()
-	skrin_shot_batton.grid_forget()
-	skrin_shot_batton_AV.grid_forget()
-	bat1.grid(row=0,column=0)
+	frame0.pack_forget()
+	frame1.pack_forget()
+	frame2.pack_forget()
+	frame3.pack_forget()
+	text_token.pack_forget()
+	import_texst.pack_forget()
+	text_box.pack_forget()
+	bat_copy.pack_forget()
+	scale.pack_forget()
+	bat_clear.pack_forget()
+	bat_past.pack_forget()
+	text_box1.pack_forget()
+	lab0.pack_forget ()
+	bat_token.pack_forget()
+	radio1.pack_forget()
+	radio2.pack_forget()
+	bat.pack_forget()
+	bat_Spelling.pack_forget()
+	dont_bat_Spelling.pack_forget()
+	frame2.pack_forget()
+	bat_t_Sp0.pack_forget()
+	bat_t_Sp1.pack_forget()
+	bat_t_Sp2.pack_forget()
+	frame21.pack_forget()
+	bat_t_Sp3.pack_forget()
+	bat_t_Sp4.pack_forget()
+	bat_t_Sp5.pack_forget()
+	skrin_shot_batton.pack_forget()
+	skrin_shot_batton_AV.pack_forget()
+	bat1.pack(fill=BOTH,expand=True)
+	root1.geometry('145x32')
+	# root1.update()
+	# print(root1.winfo_width(),root1.winfo_height())
 	#____________________________________________#
 
 def START():
-	bat.grid(columnspan=3,row=0,column=1)
-	bat_past.grid(sticky=W,columnspan=3,row=1,column=1)
-	bat_clear.grid(columnspan=3,row=1,column=1)
-	bat_copy.grid(sticky=E,columnspan=3,row=1,column=2)
-	text_box.grid(columnspan=4,row=2,column=1)
-	radio1.grid(sticky=W,columnspan=3,row=3,column=1)
-	lab0.grid(columnspan=3,row=3,column=1)
-	radio2.grid(sticky=E,columnspan=3,row=3,column=2)
-	scale.grid(columnspan =3,row=4,column=0)
-	text_box1.grid(columnspan=6,row=5,column=1)
-	bat_Spelling.grid(columnspan=4,row=6,column=1)
-	skrin_shot_batton.grid(sticky=W,columnspan=4,row=8,column=1)
-	skrin_shot_batton_AV.grid(sticky=E,columnspan=4,row=8,column=1)
-	bat_token.grid(columnspan=4,row=9,column=1)
+	#____________________________________________#
+	bat1.pack_forget()
+	root1.geometry('384x666')
+	bat.pack(fill=BOTH,expand=True)
+
+	frame0.pack(fill=BOTH,expand=True)
+	bat_past.pack(side='left',fill=BOTH,expand=True)
+	bat_clear.pack(side='left',fill=BOTH,expand=True)
+	bat_copy.pack(side='left',fill=BOTH,expand=True)
+
+	text_box.pack(side='top',fill=BOTH,expand=True)
+
+	frame1.pack(fill=BOTH,expand=True)
+	radio2.pack(side='left',fill=BOTH,expand=True)
+	lab0.pack(side='left',fill=BOTH,expand=True)
+	radio1.pack(side='left',fill=BOTH,expand=True)
+
+	scale.pack(fill=BOTH,expand=True)
+	text_box1.pack(side='top',fill=BOTH,expand=True)
+	bat_Spelling.pack(fill=BOTH,expand=True)
+
+	frame3.pack(fill=BOTH,expand=True)
+	skrin_shot_batton.pack(side='left',fill=BOTH,expand=True)
+	skrin_shot_batton_AV.pack(side='left',fill=BOTH,expand=True)
+
+	bat_token.pack(fill=BOTH,expand=True)
+	#____________________________________________#
 	text_box.delete(1.0, END)
 	text_box1.delete(1.0, END)
-	bat1.grid_forget()
-	#____________________________________________#
 	Token_test()
 	lab0['text'] = '--- --- ESA - Translate  --- ---'
 	transelte()
@@ -238,13 +260,15 @@ def Token_test():
 		Debugging_tasks()
 
 def Debugging_tasks():
-	bat_token.grid_forget()
-	skrin_shot_batton.grid_forget()
-	skrin_shot_batton_AV.grid_forget()
-	bat_Spelling.grid_forget()
-	text_token.grid(columnspan=4,row=7,column=0)
+	bat_token.pack_forget()
+	frame3.pack_forget()
+	skrin_shot_batton.pack_forget()
+	skrin_shot_batton_AV.pack_forget()
+	bat_Spelling.pack_forget()
+
+	text_token.pack(fill=BOTH,expand=True)
 	text_token.insert(INSERT,"     Введите Token Яндекс Api переводчик")
-	import_texst.grid(columnspan=4,row=8,column=0)
+	import_texst.pack(fill=BOTH,expand=True)
 
 def save_text():
 	if text_token.get(1.0, 'end-1c') == "     Введите Token Яндекс Api переводчик":
@@ -285,9 +309,13 @@ def spl():
 
 
 	lab0['text'] = '\\/ \\/  \\/  \\/  \\/  \\/'
-	bat_Spelling.grid_forget()
-	bat_token.grid_forget()
-	dont_bat_Spelling.grid(columnspan=4,row=7,column=0)
+
+	frame3.pack_forget()
+	bat_Spelling.pack_forget()
+	bat_token.pack_forget()
+	dont_bat_Spelling.pack(fill=BOTH,expand=True)
+
+
 	Chhelk = Spelling(text_box.get(1.0, 'end-1c'))
 
 
@@ -304,12 +332,15 @@ def spl():
 		bat_t_Sp0['text'],bat_t_Sp1['text'],bat_t_Sp2['text']=text_dont_bat_Spelling[0],text_dont_bat_Spelling[1],text_dont_bat_Spelling[2]
 		bat_t_Sp3['text'],bat_t_Sp4['text'],bat_t_Sp5['text']=text_dont_bat_Spelling[3],text_dont_bat_Spelling[4],text_dont_bat_Spelling[5]
 
-		bat_t_Sp0.grid(sticky=W,columnspan=3,row=9,column=0)
-		bat_t_Sp1.grid(columnspan=3,row=9,column=0)
-		bat_t_Sp2.grid(sticky=E,columnspan=3,row=9,column=1)
-		bat_t_Sp3.grid(sticky=W,columnspan=3,row=10,column=0)
-		bat_t_Sp4.grid(columnspan=3,row=10,column=0)
-		bat_t_Sp5.grid(sticky=E,columnspan=3,row=10,column=1)
+		frame2.pack(fill=BOTH,expand=True)
+		bat_t_Sp0.pack(side='left',fill=BOTH,expand=True)
+		bat_t_Sp1.pack(side='left',fill=BOTH,expand=True)
+		bat_t_Sp2.pack(side='left',fill=BOTH,expand=True)
+
+		frame21.pack(fill=BOTH,expand=True)
+		bat_t_Sp3.pack(side='left',fill=BOTH,expand=True)
+		bat_t_Sp4.pack(side='left',fill=BOTH,expand=True)
+		bat_t_Sp5.pack(side='left',fill=BOTH,expand=True)
 
 		Chhelk.clear()
 
@@ -320,14 +351,18 @@ def spl_dont():
 	lab0['text'] = '/\\  /\\  /\\  /\\  /\\  /\\'
 	global text_dont_bat_Spelling
 	text_dont_bat_Spelling.clear()
-	dont_bat_Spelling.grid_forget()
-	bat_t_Sp0.grid_forget()
-	bat_t_Sp1.grid_forget()
-	bat_t_Sp2.grid_forget()
-	bat_t_Sp3.grid_forget()
-	bat_t_Sp4.grid_forget()
-	bat_t_Sp5.grid_forget()
-	bat_Spelling.grid(columnspan=4,row=6,column=0)
+	dont_bat_Spelling.pack_forget()
+
+	frame2.pack_forget()
+	frame21.pack_forget()
+	bat_t_Sp0.pack_forget()
+	bat_t_Sp1.pack_forget()
+	bat_t_Sp2.pack_forget()
+	bat_t_Sp3.pack_forget()
+	bat_t_Sp4.pack_forget()
+	bat_t_Sp5.pack_forget()
+	bat_Spelling.pack(fill=BOTH,expand=True)
+	frame3.pack(fill=BOTH,expand=True)
 
 def sending_text(text_sennd,NAME_TEXT):
 	#  Првие. умнек, как дила,
@@ -377,15 +412,16 @@ def skrinshot_s(AVTO_S=0):
 
 		if Auto_capture == 1:
 			global globalF3
-			paint.grid_forget()
-			lab0.grid()
-			root1.geometry('+{}+{}'.format(location_window[0],location_window[1]))
+			paint.pack_forget()
+			bat1.pack()
+			root1.geometry('145x32+{}+{}'.format(location_window[0],location_window[1]))
 			root1.update()
 			root1.overrideredirect(0)
 			root1.update()
 			START()
 			lab0['width']=25
 			text_box.delete(1.0, END)
+			text_box1.delete(1.0, END)
 			globalF3 = all_cord_mnogo
 			Tracking_S()
 			root1.bind('F1',skrinshot_bid)
@@ -412,15 +448,16 @@ def skrinshot_s(AVTO_S=0):
 
 
 
-		paint.grid_forget()
-		lab0.grid()
-		root1.geometry('+{}+{}'.format(location_window[0],location_window[1]))
+		paint.pack_forget()
+		bat1.pack()
+		root1.geometry('145x32+{}+{}'.format(location_window[0],location_window[1]))
 		root1.update()
 		root1.overrideredirect(0)
 		root1.update()
 		START()
 		lab0['width']=25
 		text_box.delete(1.0, END)
+		text_box1.delete(1.0, END)
 
 
 		i=0
@@ -524,8 +561,9 @@ def skrinshot_s(AVTO_S=0):
 
 	root1.unbind('F1')
 	STOP()
-	bat1.grid_forget()
-	lab0.grid()
+	bat1.pack_forget()
+	frame1.pack()
+	lab0.pack()
 	lab0['width']=45
 	lab0['text']='-------- [F2] --------'
 	root1.update()
@@ -533,15 +571,16 @@ def skrinshot_s(AVTO_S=0):
 	with mss.mss() as sct:
 		monitor = {"top":0, "left": 0, "width": win32api.GetSystemMetrics(0), "height":win32api.GetSystemMetrics(1)}
 		mss.tools.to_png(sct.grab(monitor).rgb, sct.grab(monitor).size, output='photo_t.png')
-	lab0.grid_forget()
+	lab0.pack_forget()
+	frame1.pack_forget()
 	root1.overrideredirect(1)
 
 	global imgas
 	imgas = ImageTk.PhotoImage(Image.open('photo_t.png'))
 	paint.create_image(0,0, anchor=NW,image=imgas)
 	location_window = (root1.winfo_x(),root1.winfo_y())
-	paint.grid()
-	root1.geometry('+0+0')
+	paint.pack()
+	root1.geometry('{}x{}+0+0'.format(root1.winfo_screenwidth(),root1.winfo_screenheight()))
 	root1.update()
 
 
@@ -552,12 +591,14 @@ def skrinshot_s(AVTO_S=0):
 
 	x=y=0
 	all_cord_mnogo = []
+
 	root1.bind('<B1-Motion>',one)
 	root1.bind('<ButtonRelease-1>',one)
 	root1.bind('<F2>',exit_func)
 
 def skrinshot_bid(event):
 	skrinshot_s()
+	pass
 
 #------------- ORC AVTO -----------------------#
 
@@ -671,8 +712,7 @@ except:
 
 root1.title('Translete')
 root1["bg"] = Background
-root1.resizable(width=False, height=False)
-
+# root1.resizable(width=False, height=False)
 Switches_radio = StringVar()
 Switches_radio.set('1')
 token = ''
@@ -685,37 +725,40 @@ globalF3 = []
 text_box = tkinter.scrolledtext.ScrolledText(root1,width=43, height=15)
 text_box1= tkinter.scrolledtext.ScrolledText(root1,width=43, height=15)
 #__________________________________________________________________________________________________________#
-lab0= Label(root1,width =25,bg  = Background,fg = '#00FFFF',font = ( "Helvetica" , 10))
+frame0 = Frame(root1)
+bat_copy = Button(frame0,width=16, text='COPY', fg = Text_color,bg  = Background, command = copy)
+bat_clear = Button(frame0,width=18, text='X_X',  fg = Text_color,bg  = Background, command = clear)
+bat_past = Button(frame0,width=16, text='PASTE',fg = Text_color,bg  = Background, command = paste)
 #__________________________________________________________________________________________________________#
-radio1=Radiobutton(root1, text='RU',selectcolor = Background, bg  = Background,fg = Text_color,value='0',variable=Switches_radio,command = radio)
-radio2=Radiobutton(root1, text='ENG',selectcolor = Background , bg  = Background,fg = Text_color, value='1',variable=Switches_radio, command = radio)
+frame1 = Frame(root1)
+lab0= Label(frame1,width =25,bg  = Background,fg = '#00FFFF',font = ( "Helvetica" , 10))
+radio1=Radiobutton(frame1, text='RU',selectcolor = Background, bg  = Background,fg = Text_color,value='0',variable=Switches_radio,command = radio)
+radio2=Radiobutton(frame1, text='ENG',selectcolor = Background , bg  = Background,fg = Text_color, value='1',variable=Switches_radio, command = radio)
 #__________________________________________________________________________________________________________#
-bat = Button(root1,width=52, text='STOP', fg = Text_color,bg  = Background, command = STOP)
-bat_copy = Button(root1,width=16, text='COPY', fg = Text_color,bg  = Background, command = copy)
-bat_clear = Button(root1,width=18, text='X_X',  fg = Text_color,bg  = Background, command = clear)
-bat_past = Button(root1,width=16, text='PASTE',fg = Text_color,bg  = Background, command = paste)
-
 bat_token = Button(root1,width=52, text='API Яндекс.Переводчик',fg = Text_color, bg  = Background, command = Debugging_tasks)
 bat_Spelling = Button(root1,width=52, text='\\/', fg = Text_color, bg  = Background, command = spl)
 dont_bat_Spelling = Button(root1,width=52, text='/\\', fg = Text_color, bg  = Background, command = spl_dont)
 #__________________________________________________________________________________________________________#
+bat = Button(root1,width=52, text='STOP', fg = Text_color,bg  = Background, command = STOP)
 bat1 = Button(root1, width=15,text='START',  command = START,bg  = Background, fg = Text_color, font = 'BOLD' )
-bat1.grid(row=0,column=0)
+bat1.pack()
 #__________________________________________________________________________________________________________#
 text_token = Text(root1,width=45, height=1)
 import_texst = Button(root1,width =50,text='Save Token',fg = Text_color,bg  = Background, command = save_text)
 #__________________________________________________________________________________________________________#
-
-bat_t_Sp0 = Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text0)
-bat_t_Sp1 = Button(root1,width=20,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text1)
-bat_t_Sp2 = Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text2)
-bat_t_Sp3 = Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text3)
-bat_t_Sp4 = Button(root1,width=20,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text4)
-bat_t_Sp5 = Button(root1,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text5)
+frame2 = Frame(root1)
+bat_t_Sp0 = Button(frame2,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text0)
+bat_t_Sp1 = Button(frame2,width=20,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text1)
+bat_t_Sp2 = Button(frame2,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text2)
 #__________________________________________________________________________________________________________#
-skrin_shot_batton   = Button(root1, text='[F1]', width=26,bg = Background, fg = Text_color, command = skrinshot_s)
-skrin_shot_batton_AV= Button(root1, text='[F3]', width=26,bg = Background, fg = Text_color, command = skrinshot_bid_AVS)
-
+frame21 = Frame(root1)
+bat_t_Sp3 = Button(frame21,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text3)
+bat_t_Sp4 = Button(frame21,width=20,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text4)
+bat_t_Sp5 = Button(frame21,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text5)
+#__________________________________________________________________________________________________________#
+frame3 = Frame(root1)
+skrin_shot_batton   = Button(frame3, text='[F1]', width=26,bg = Background, fg = Text_color, command = skrinshot_s)
+skrin_shot_batton_AV= Button(frame3, text='[F3]', width=26,bg = Background, fg = Text_color, command = skrinshot_bid_AVS)
 #__________________________________________________________________________________________________________#
 paint = Canvas(root1,width=root1.winfo_screenwidth(), height=root1.winfo_screenheight())
 scale = Scale(root1, length=367,width=15,orient=HORIZONTAL,troughcolor=Background,activebackground=Background,relief=FLAT ,showvalue=0,sliderlength=52,from_=0, to=2,highlightbackground=Background,bg  = Background)
