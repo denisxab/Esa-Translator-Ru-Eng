@@ -717,8 +717,14 @@ def General_settings():
 		with open('General_settings.txt','w') as Files:
 			Files.write('#4E51D8\n')
 			Files.write('#FFFFFF\n')
-			Files.write('15\n')
-			Files.write('15\n')
+
+			if win32api.GetSystemMetrics(1) <= 780:
+				Files.write('10\n')
+				Files.write('10\n')
+
+			elif win32api.GetSystemMetrics(1) >= 780:
+				Files.write('15\n')
+				Files.write('15\n')
 
 		General_settings()
 
@@ -745,8 +751,6 @@ root1["bg"] = Background
 # root1.resizable(width=False, height=False)
 Switches_radio = StringVar()
 Switches_radio.set('1')
-
-print(dimensions)
 #####################################################################################################################
 ############################################## TKINTER ##############################################################
 text_box = tkinter.scrolledtext.ScrolledText(root1,width=43, height=dimensions[0])
