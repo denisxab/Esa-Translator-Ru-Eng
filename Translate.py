@@ -1,54 +1,58 @@
-import os
+
 import sys
+import os
+
+if os.path.basename(__file__) == 'Translate.py':
+
+	for x in range(2):
+		if sys.platform == 'win32':
+
+			try:
+				import custom_libraries
+				custom_libraries.check_lib()
+			except ModuleNotFoundError:
+				pass
+
+		elif sys.platform == 'linux':
+
+			try:
+				import custom_libraries
+				custom_libraries.check_lib()
+			except ModuleNotFoundError:
+				pass
+
+		elif sys.platform == 'darwin':
+
+			try:
+				import custom_libraries
+				custom_libraries.check_lib()
+
+			except ModuleNotFoundError:
+				pass
+
 import json
 from tkinter import *
 import tkinter.scrolledtext
 from re import findall,compile
 
+import requests
+import pyperclip
 
-try:
-	import requests
-except:
-	os.system('python -m pip install --upgrade pip')
-	os.system('pip3 install requests')
-try:
-	import pyperclip
-except:
-	os.system('pip3 install pyperclip')
-try:
-	import win32api
-except:
-	os.system('pip3 install pypiwin32')
-try:
-	import win32gui
-except:
-	os.system('pip3 install win32gui')
-try:
-	from PIL import Image,ImageTk
-except:
-	os.system('pip3 install Pillow')
-try:
-	import mss
-	import mss.tools
-except:
-	os.system('pip3 install mss')
-try:
-	import cv2
-except:
-	os.system('pip3 install opencv-python')
-try:
-	import numpy
-except:
-	os.system('pip3 install numpy')
+import win32api
+import win32gui
+
+from PIL import Image,ImageTk
+import mss
+import mss.tools
+
+import cv2
+import numpy
 ######################################################
 #https://github.com/UB-Mannheim/tesseract/wiki
-try:
-	import pytesseract
-	pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe' # выбрать файл с Tesseract-OCR
-except:
-	os.system('pip3 install pytesseract')
+import pytesseract
+pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe' # выбрать файл с Tesseract-OCR
 ######################################################
-
+I_killed_PEP_8 = True
 ############################################################################################################
 #---------------- Translator --------------------#
 
@@ -203,7 +207,6 @@ def STOP():
 	#____________________________________________#
 
 def START():
-	#____________________________________________#
 	bat1.pack_forget()
 	root1.geometry('384x666')
 	bat.pack(fill=BOTH,expand=True)
@@ -365,17 +368,30 @@ def spl_dont():
 	frame3.pack(fill=BOTH,expand=True)
 
 def sending_text(text_sennd,NAME_TEXT):
-	#  Првие. умнек, как дила,
+	# Првие. умнек как дила,
+	a = text_box.get(1.0, 'end-1c')
+	cash_text = re.findall(re.compile('[A-Za-z0-9а-яА-Я]+'), a)
+	cash_comma = re.findall(re.compile('[^A-Za-z0-9а-яА-Я]+'), a)
 
-	cash_text = re.findall(re.compile('[A-Za-z0-9а-яА-Я]+'), text_box.get(1.0, 'end-1c'))
-	for x in re.findall(re.compile('[A-Za-z0-9а-яА-Я]+'), text_box.get(1.0, 'end-1c')):
+
+	isa,y = 1,0
+	for x in re.findall(re.compile('[A-Za-z0-9а-яА-Я]+'), a):
+		cash_text.insert(isa,cash_comma[y])
+		isa+=2
+		y+=1
+
 		if x == NAME_TEXT:
 			i=cash_text.index(x)
 			cash_text.pop(i)
 			cash_text.insert(i,text_sennd)
 
+	# i=1
+	# for x in cash_comma:
+	# 	cash_text.insert(i,x)
+	# 	i+=2
+
 	text_box.delete(1.0, END)
-	text_box.insert(INSERT,' '.join(cash_text))
+	text_box.insert(INSERT,''.join(cash_text))
 	spl_dont()
 	spl()
 
@@ -757,39 +773,39 @@ text_box = tkinter.scrolledtext.ScrolledText(root1,width=43, height=dimensions[0
 text_box1= tkinter.scrolledtext.ScrolledText(root1,width=43, height=dimensions[1])
 #__________________________________________________________________________________________________________#
 frame0 = Frame(root1)
-bat_copy = Button(frame0,width=16, text='COPY', fg = Text_color,bg  = Background, command = copy)
-bat_clear = Button(frame0,width=16, text='X_X',  fg = Text_color,bg  = Background, command = clear)
-bat_past = Button(frame0,width=16, text='PASTE',fg = Text_color,bg  = Background, command = paste)
+bat_copy = Button(frame0,width=6, text='COPY', fg = Text_color,bg  = Background, command = copy)
+bat_clear = Button(frame0,width=6, text='X_X',  fg = Text_color,bg  = Background, command = clear)
+bat_past = Button(frame0,width=6, text='PASTE',fg = Text_color,bg  = Background, command = paste)
 #__________________________________________________________________________________________________________#
 frame1 = Frame(root1)
-lab0= Label(frame1,width =25,bg  = Background,fg = '#00FFFF',font = ( "Helvetica" , 10))
+lab0= Label(frame1,width =15,bg  = Background,fg = '#00FFFF',font = ( "Helvetica" , 10))
 radio1=Radiobutton(frame1, text='RU',selectcolor = Background, bg  = Background,fg = Text_color,value='0',variable=Switches_radio,command = radio)
 radio2=Radiobutton(frame1, text='ENG',selectcolor = Background , bg  = Background,fg = Text_color, value='1',variable=Switches_radio, command = radio)
 #__________________________________________________________________________________________________________#
-bat_token = Button(root1,width=52, text='API Яндекс.Переводчик',fg = Text_color, bg  = Background, command = Debugging_tasks)
-bat_Spelling = Button(root1,width=52, text='\\/', fg = Text_color, bg  = Background, command = spl)
-dont_bat_Spelling = Button(root1,width=52, text='/\\', fg = Text_color, bg  = Background, command = spl_dont)
+bat_token = Button(root1,width=42, text='API Яндекс.Переводчик',fg = Text_color, bg  = Background, command = Debugging_tasks)
+bat_Spelling = Button(root1,width=42, text='\\/', fg = Text_color, bg  = Background, command = spl)
+dont_bat_Spelling = Button(root1,width=42, text='/\\', fg = Text_color, bg  = Background, command = spl_dont)
 #__________________________________________________________________________________________________________#
-bat = Button(root1,width=52, text='STOP', fg = Text_color,bg  = Background, command = STOP)
+bat = Button(root1,width=42, text='STOP', fg = Text_color,bg  = Background, command = STOP)
 bat1 = Button(root1, width=15,text='START',  command = START,bg  = Background, fg = Text_color, font = 'BOLD' )
 bat1.pack()
 #__________________________________________________________________________________________________________#
-text_token = Text(root1,width=45, height=1)
-import_texst = Button(root1,width =50,text='Save Token',fg = Text_color,bg  = Background, command = save_text)
+text_token = Text(root1,width=35, height=1)
+import_texst = Button(root1,width =40,text='Save Token',fg = Text_color,bg  = Background, command = save_text)
 #__________________________________________________________________________________________________________#
 frame2 = Frame(root1)
-bat_t_Sp0 = Button(frame2,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text0)
-bat_t_Sp1 = Button(frame2,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text1)
-bat_t_Sp2 = Button(frame2,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text2)
+bat_t_Sp0 = Button(frame2,width=9,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text0)
+bat_t_Sp1 = Button(frame2,width=9,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text1)
+bat_t_Sp2 = Button(frame2,width=9,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text2)
 #__________________________________________________________________________________________________________#
 frame21 = Frame(root1)
-bat_t_Sp3 = Button(frame21,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text3)
-bat_t_Sp4 = Button(frame21,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text4)
-bat_t_Sp5 = Button(frame21,width=19,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text5)
+bat_t_Sp3 = Button(frame21,width=9,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text3)
+bat_t_Sp4 = Button(frame21,width=9,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text4)
+bat_t_Sp5 = Button(frame21,width=9,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text5)
 #__________________________________________________________________________________________________________#
 frame3 = Frame(root1)
-skrin_shot_batton   = Button(frame3, text='[F1]', width=26,bg = Background, fg = Text_color, command = skrinshot_s)
-skrin_shot_batton_AV= Button(frame3, text='[F3]', width=26,bg = Background, fg = Text_color, command = skrinshot_bid_AVS)
+skrin_shot_batton   = Button(frame3, text='[F1]', width=11,bg = Background, fg = Text_color, command = skrinshot_s)
+skrin_shot_batton_AV= Button(frame3, text='[F3]', width=11,bg = Background, fg = Text_color, command = skrinshot_bid_AVS)
 #__________________________________________________________________________________________________________#
 paint = Canvas(root1,width=root1.winfo_screenwidth(), height=root1.winfo_screenheight())
 scale = Scale(root1, length=367,width=15,orient=HORIZONTAL,troughcolor=Background,activebackground=Background,relief=FLAT ,showvalue=0,sliderlength=52,from_=0, to=2,highlightbackground=Background,bg  = Background)
