@@ -35,14 +35,11 @@ I_killed_PEP_8 = True
 def SAVE_OZ_Text(ТEXT,RESAU=False):
 	if scale.get()==2:
 		lab0['text'] = '<NO OFLAIN>'
-		return
+		return False
 
-	elif scale.get()==1:
-		lab0['text'] = '<NO SAVE>'
-		return
+	
 
-
-	elif RESAU == False:
+	if RESAU == False:
 		try:
 			with open('Saved_replies.json','r',encoding='utf-8') as JSon_R:
 				Jsons = json.load(JSon_R)
@@ -51,12 +48,12 @@ def SAVE_OZ_Text(ТEXT,RESAU=False):
 				elif ТEXT in Jsons:
 					text_box1.delete(1.0, END)
 					text_box1.insert(INSERT,Jsons[ТEXT])
+					lab0['text'] = '|+| |+| |+| {}kb |+| |+| |+|'.format(os.path.getsize('Saved_replies.json')//1024)
 					return True
 
 		except FileNotFoundError:
 			with open('Saved_replies.json','w',encoding='utf-8') as JSon_W:
 				json.dump({},JSon_W,sort_keys=False,ensure_ascii=False)
-
 
 	elif RESAU != False:
 		if scale.get()==0:
@@ -68,6 +65,11 @@ def SAVE_OZ_Text(ТEXT,RESAU=False):
 					with open('Saved_replies.json','w',encoding='utf-8') as JSon_W:
 						json.dump(Jsons,JSon_W,sort_keys=False,ensure_ascii=False)
 					return False
+
+		elif scale.get()==1:
+			lab0['text'] = '<NO SAVE>'
+			return False
+		
  
 def transelte():
 	def transelte_func (text,lang,token):
@@ -75,6 +77,7 @@ def transelte():
 			try:
 				a =  requests.get('https://translate.yandex.net/api/v1.5/tr.json/translate', params={"key":token,'text':str(text),'format':'plain','lang':lang}).json()
 				if a['code'] == 200:
+					print('++++++')
 					return a['text']
 				elif a['code'] == 401:
 					return '#401##401#'
@@ -120,16 +123,14 @@ def transelte():
 					SAVE_OZ_Text(a,resiut)
 
 			#_____________________________________________________$
-			elif OTV:
-				lab0['text'] = '|+| |+| |+| {}kb |+| |+| |+|'.format(os.path.getsize('Saved_replies.json')//1024)
-
+			
 
 		else :
 			text_box1.delete(1.0, END)
 
 
 
-		root1.after(500, transelte)
+		root1.after(300, transelte)
 
 
 	root1.after(1000, transelte)
