@@ -77,7 +77,6 @@ def transelte():
 			try:
 				a =  requests.get('https://translate.yandex.net/api/v1.5/tr.json/translate', params={"key":token,'text':str(text),'format':'plain','lang':lang}).json()
 				if a['code'] == 200:
-					print('++++++')
 					return a['text']
 				elif a['code'] == 401:
 					return '#401##401#'
