@@ -352,10 +352,10 @@ def sending_text(text_sennd,NAME_TEXT):
 	# 10 # . Приве0 как дила, умнек0  #
 	###################################
 
+
 	a = text_box.get(1.0, 'end-1c')
 	cash_text = re.findall(re.compile('[A-Za-zа-яА-Я]+'), a)
 	cash_comma = re.findall(re.compile('[^A-Za-zа-яА-Я]+'), a)
-
 
 
 	for x in re.findall(re.compile('[A-Za-zа-яА-Я]+'), a):
@@ -365,11 +365,6 @@ def sending_text(text_sennd,NAME_TEXT):
 			cash_text.insert(i,text_sennd)
 
 
-	b = ' '.join(a.split(' ')[0])[0]
-	if not b in re.findall(re.compile('[A-Za-zа-яА-Я]+'), b):
-		cash_text.insert(0,'o')
-
-	
 	for x in cash_comma:
 		split_x = x.split(' ')
 		for y in split_x:
@@ -377,9 +372,12 @@ def sending_text(text_sennd,NAME_TEXT):
 				if split_x[0] != '':
 					i = cash_comma.index(x)
 					cash_comma.pop(i)
-					cash_comma.insert(i,' {}'.format(x))
+					cash_comma.insert(i,' {} '.format(x))
 
 
+	b = ' '.join(a.split(' ')[0])[0]
+	if not b in re.findall(re.compile('[A-Za-zа-яА-Я]+'), b):
+		cash_text.insert(0,'o')
 	i=1
 	for x in cash_comma:
 		cash_text.insert(i,x)
