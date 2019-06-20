@@ -2,7 +2,7 @@
 I tried to make the most minimalistic and convenient translator for PC from Russian to English.Yandex translator API is used for the directory, so for the Executive you need to create a token by reference https://tech.yandex.ru/translate/
 
 Download version with screen translator:
-https://drive.google.com/file/d/18_xnepEp9Wq9a-dF-Hoy7ZoyHv8kpEbE/view
+https://drive.google.com/open?id=14J6AzSGM2NA8dU22zNkEnDVeR4OZ3xo1
 
 Author - https://vk.com/sasiska20
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -10,7 +10,7 @@ Author - https://vk.com/sasiska20
 
 
 Скачать версию с экранным переводчиком:
-https://drive.google.com/file/d/18_xnepEp9Wq9a-dF-Hoy7ZoyHv8kpEbE/view
+https://drive.google.com/open?id=14J6AzSGM2NA8dU22zNkEnDVeR4OZ3xo1
 
 Авто - https://vk.com/sasiska20
 
