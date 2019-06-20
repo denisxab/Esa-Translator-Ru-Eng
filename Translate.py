@@ -352,9 +352,16 @@ def sending_text(text_sennd,NAME_TEXT):
 	# Приве. умнек\ как дила0
 	# . Приве0 как дила, умнек0
 
+
+
 	a = text_box.get(1.0, 'end-1c')
 	cash_text = re.findall(re.compile('[A-Za-zа-яА-Я]+'), a)
 	cash_comma = re.findall(re.compile('[^A-Za-zа-яА-Я]+'), a)
+
+	print(cash_text)
+	print(cash_comma)
+
+
 
 	for x in re.findall(re.compile('[A-Za-zа-яА-Я]+'), a):
 		if x == NAME_TEXT:
@@ -362,12 +369,12 @@ def sending_text(text_sennd,NAME_TEXT):
 			cash_text.pop(i)
 			cash_text.insert(i,text_sennd)
 
-	i=0
+	i=1
 	for x in cash_comma:
 		cash_text.insert(i,x)
 		i+=2
 
-
+	print(cash_text)
 
 	text_box.delete(1.0, END)
 	text_box.insert(INSERT,''.join(cash_text))
@@ -438,8 +445,6 @@ def skrinshot_s(AVTO_S=0):
 
 				except cv2.error:
 					continue
-
-
 
 
 
