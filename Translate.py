@@ -70,7 +70,6 @@ def SAVE_OZ_Text(ТEXT,RESAU=False):
 			lab0['text'] = '<NO SAVE>'
 			return False
 		
- 
 def transelte():
 	def transelte_func (text,lang,token):
 		if text != '':
