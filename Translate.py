@@ -2,33 +2,12 @@
 import sys
 import os
 
+
+
 if os.path.basename(__file__) == 'Translate.py':
+	import custom_libraries
+	custom_libraries.mainCL()
 
-	for x in range(2):
-		if sys.platform == 'win32':
-
-			try:
-				import custom_libraries
-				custom_libraries.check_lib()
-			except ModuleNotFoundError:
-				pass
-
-		elif sys.platform == 'linux':
-
-			try:
-				import custom_libraries
-				custom_libraries.check_lib()
-			except ModuleNotFoundError:
-				pass
-
-		elif sys.platform == 'darwin':
-
-			try:
-				import custom_libraries
-				custom_libraries.check_lib()
-
-			except ModuleNotFoundError:
-				pass
 
 import json
 from tkinter import *
@@ -249,8 +228,9 @@ def copy():
 	pass
 	
 def clear():
-	STOP()
-	START()
+	text_box.delete(1.0, END)
+	text_box1.delete(1.0, END)
+
 
 #--------------- TOKEN ---------------------#
 
@@ -369,26 +349,25 @@ def spl_dont():
 
 def sending_text(text_sennd,NAME_TEXT):
 	# Првие. умнек как дила,
+	# Приве. умнек\ как дила0
+	# . Приве0 как дила, умнек0
+
 	a = text_box.get(1.0, 'end-1c')
-	cash_text = re.findall(re.compile('[A-Za-z0-9а-яА-Я]+'), a)
-	cash_comma = re.findall(re.compile('[^A-Za-z0-9а-яА-Я]+'), a)
+	cash_text = re.findall(re.compile('[A-Za-zа-яА-Я]+'), a)
+	cash_comma = re.findall(re.compile('[^A-Za-zа-яА-Я]+'), a)
 
-
-	isa,y = 1,0
-	for x in re.findall(re.compile('[A-Za-z0-9а-яА-Я]+'), a):
-		cash_text.insert(isa,cash_comma[y])
-		isa+=2
-		y+=1
-
+	for x in re.findall(re.compile('[A-Za-zа-яА-Я]+'), a):
 		if x == NAME_TEXT:
 			i=cash_text.index(x)
 			cash_text.pop(i)
 			cash_text.insert(i,text_sennd)
 
-	# i=1
-	# for x in cash_comma:
-	# 	cash_text.insert(i,x)
-	# 	i+=2
+	i=0
+	for x in cash_comma:
+		cash_text.insert(i,x)
+		i+=2
+
+
 
 	text_box.delete(1.0, END)
 	text_box.insert(INSERT,''.join(cash_text))
@@ -764,7 +743,6 @@ except:
 
 root1.title('Translete')
 root1["bg"] = Background
-# root1.resizable(width=False, height=False)
 Switches_radio = StringVar()
 Switches_radio.set('1')
 #####################################################################################################################
