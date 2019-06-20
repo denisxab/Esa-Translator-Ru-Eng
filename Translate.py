@@ -2,12 +2,9 @@
 import sys
 import os
 
-
-
 if os.path.basename(__file__) == 'Translate.py':
 	import custom_libraries
 	custom_libraries.mainCL()
-
 
 import json
 from tkinter import *
@@ -348,18 +345,17 @@ def spl_dont():
 	frame3.pack(fill=BOTH,expand=True)
 
 def sending_text(text_sennd,NAME_TEXT):
-	# Првие. умнек как дила,
-	# Приве. умнек\ как дила0
-	# . Приве0 как дила, умнек0
-
-
+	###################################
+	# умнек мир приве                 #
+	# умнек! мир приве                #
+	# Првие. умнек как дила,          #
+	# Приве. умнек\ как дила0         #
+	# 10 # . Приве0 как дила, умнек0  #
+	###################################
 
 	a = text_box.get(1.0, 'end-1c')
 	cash_text = re.findall(re.compile('[A-Za-zа-яА-Я]+'), a)
 	cash_comma = re.findall(re.compile('[^A-Za-zа-яА-Я]+'), a)
-
-	print(cash_text)
-	print(cash_comma)
 
 
 
@@ -369,12 +365,27 @@ def sending_text(text_sennd,NAME_TEXT):
 			cash_text.pop(i)
 			cash_text.insert(i,text_sennd)
 
+
+	b = ' '.join(a.split(' ')[0])[0]
+	if not b in re.findall(re.compile('[A-Za-zа-яА-Я]+'), b):
+		cash_text.insert(0,'o')
+
+	
+	for x in cash_comma:
+		split_x = x.split(' ')
+		for y in split_x:
+			if y in re.findall(re.compile('[0-9]+'), x):
+				if split_x[0] != '':
+					i = cash_comma.index(x)
+					cash_comma.pop(i)
+					cash_comma.insert(i,' {}'.format(x))
+
+
 	i=1
 	for x in cash_comma:
 		cash_text.insert(i,x)
 		i+=2
 
-	print(cash_text)
 
 	text_box.delete(1.0, END)
 	text_box.insert(INSERT,''.join(cash_text))
