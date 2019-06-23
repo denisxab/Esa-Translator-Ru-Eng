@@ -138,9 +138,11 @@ def radio():
 	if Switches_radio.get() == '0':
 		win32api.LoadKeyboardLayout("00000409",1)
 		Check=' '
+		text_box.insert(INSERT,' ')
 	elif Switches_radio.get() == '1':
 		win32api.LoadKeyboardLayout("00000419",1)
 		Check=' '
+		text_box.insert(INSERT,' ')
 
 #-------------- STOP - START ----------------------#
 def STOP():
@@ -217,6 +219,7 @@ def START():
 
 def paste():
 	text_box.insert(INSERT,str(pyperclip.paste()))
+	spl_dont()
 	spl()
 		
 def copy():
@@ -344,25 +347,58 @@ def spl_dont():
 	frame3.pack(fill=BOTH,expand=True)
 
 def sending_text(text_sennd,NAME_TEXT):
-	###################################
+	#############TEST##################
 	# умнек мир приве                 #
 	# умнек! мир приве                #
 	# Првие. умнек как дила,          #
 	# Приве. умнек\ как дила0         #
 	# 10 # . Приве0 как дила, умнек0  #
-	# Умнек 10приве Приве. 10умнек\   #
+	# 3Умнек 10приве1 Приве1. 10умнек\#
+	#cd Ge don't bat UL aaa Spelling  #
 	###################################
+
+
 
 
 	a = text_box.get(1.0, 'end-1c')
 	cash_text = re.findall(re.compile('[A-Za-zа-яА-Я]+'), a)
 	cash_comma = re.findall(re.compile('[^A-Za-zа-яА-Я]+'), a)
 
+
+
+	else_no_t=True
 	for x in re.findall(re.compile('[A-Za-zа-яА-Я]+'), a):
 		if x == NAME_TEXT:
 			i=cash_text.index(x)
 			cash_text.pop(i)
 			cash_text.insert(i,text_sennd)
+			else_no_t=False
+
+
+	if else_no_t:
+		op=[]
+		i = len(NAME_TEXT.split(' '))
+		io=0
+
+		for x in re.findall(re.compile('[A-Za-zа-яА-Я]+'), a):
+			op.append(x)
+
+			if ' '.join(op) == NAME_TEXT:
+				ihh=cash_text.index(op[0])
+				for yu in range(i):
+					cash_text.pop(ihh)
+
+				cash_text.insert(ihh,text_sennd)
+				op=[]
+
+
+			if io == i:
+				op=[]
+				io=0
+
+			else:
+				io+=1
+
 
 
 	for x in cash_comma:
@@ -371,7 +407,6 @@ def sending_text(text_sennd,NAME_TEXT):
 			if y in re.findall(re.compile('[0-9]+'), x):
 
 				i = cash_comma.index(x)
-
 				try:
 					if split_x[0]!='':
 						cash_comma.pop(i)
@@ -388,10 +423,10 @@ def sending_text(text_sennd,NAME_TEXT):
 	try:
 		b = ' '.join(a.split(' ')[0])[0]
 		if not b in re.findall(re.compile('[A-Za-zа-яА-Я]+'), b):
-			cash_text.insert(0,'o')
+			cash_text.insert(0,'-')
 
 	except IndexError:
-		cash_text.insert(0,'o')
+		cash_text.insert(0,'-')
 
 	i=1
 	for x in cash_comma:
