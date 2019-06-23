@@ -1,8 +1,8 @@
 Download version with screen translator:
-https://drive.google.com/open?id=1VNq1Oi-AUc9nNjjdUldcPyRBmvlzCniZ
+https://drive.google.com/file/d/1RVrAuCZOP6YPOfUcuRt1Z1iDQGZkXxi4/view
 
 Скачать версию с экранным переводчиком:
-https://drive.google.com/open?id=1VNq1Oi-AUc9nNjjdUldcPyRBmvlzCniZ
+https://drive.google.com/file/d/1RVrAuCZOP6YPOfUcuRt1Z1iDQGZkXxi4/view
 
 
 
