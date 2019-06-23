@@ -23,6 +23,7 @@ import mss.tools
 
 import cv2
 import numpy
+
 ######################################################
 #https://github.com/UB-Mannheim/tesseract/wiki
 import pytesseract
@@ -177,6 +178,7 @@ def STOP():
 	bat_t_Sp5.pack_forget()
 	skrin_shot_batton.pack_forget()
 	skrin_shot_batton_AV.pack_forget()
+	skrin_shot_batton_COMBO.pack_forget()
 	bat1.pack(fill=BOTH,expand=True)
 	root1.geometry('145x32')
 	# root1.update()
@@ -207,6 +209,7 @@ def START():
 	frame3.pack(fill=BOTH,expand=True)
 	skrin_shot_batton.pack(side='left',fill=BOTH,expand=True)
 	skrin_shot_batton_AV.pack(side='left',fill=BOTH,expand=True)
+	skrin_shot_batton_COMBO.pack(side='left',fill=BOTH,expand=True)
 
 	bat_token.pack(fill=BOTH,expand=True)
 	#____________________________________________#
@@ -354,17 +357,13 @@ def sending_text(text_sennd,NAME_TEXT):
 	# Приве. умнек\ как дила0         #
 	# 10 # . Приве0 как дила, умнек0  #
 	# 3Умнек 10приве1 Приве1. 10умнек\#
-	#cd Ge don't bat UL aaa Spelling  #
+	#cd Ge UL aaa don't bat UL aaa Spelling  #
 	###################################
-
-
 
 
 	a = text_box.get(1.0, 'end-1c')
 	cash_text = re.findall(re.compile('[A-Za-zа-яА-Я]+'), a)
 	cash_comma = re.findall(re.compile('[^A-Za-zа-яА-Я]+'), a)
-
-
 
 	else_no_t=True
 	for x in re.findall(re.compile('[A-Za-zа-яА-Я]+'), a):
@@ -376,29 +375,29 @@ def sending_text(text_sennd,NAME_TEXT):
 
 
 	if else_no_t:
-		op=[]
+
+		op = re.findall(re.compile('[A-Za-zа-яА-Я]+'), a)
 		i = len(NAME_TEXT.split(' '))
+		NAME_TEXT = ''.join(NAME_TEXT.split(' '))
 		io=0
+		poi=[]
+		for x in range(len(op)):
 
-		for x in re.findall(re.compile('[A-Za-zа-яА-Я]+'), a):
-			op.append(x)
+			for y in range(i):
+				try:
+					poi.append(op[x+io])
+					io+=1
+				except IndexError:
+					break
 
-			if ' '.join(op) == NAME_TEXT:
-				ihh=cash_text.index(op[0])
+			if ''.join(poi) == NAME_TEXT:
+				ihh=cash_text.index(poi[0])
 				for yu in range(i):
 					cash_text.pop(ihh)
-
 				cash_text.insert(ihh,text_sennd)
-				op=[]
 
-
-			if io == i:
-				op=[]
-				io=0
-
-			else:
-				io+=1
-
+			poi=[]
+			io=0
 
 
 	for x in cash_comma:
@@ -516,6 +515,7 @@ def skrinshot_s(AVTO_S=0):
 		lab0['width']=25
 		text_box.delete(1.0, END)
 		text_box1.delete(1.0, END)
+		root1.bind('F1',skrinshot_bid)
 
 
 		i=0
@@ -531,7 +531,7 @@ def skrinshot_s(AVTO_S=0):
 						text_box.insert(INSERT,'{} '.format(a))
 
 					else:
-						text_box.insert(INSERT,'\n\\/-------------{}-------------------\\/\n {} '.format(i+1,a))
+						text_box.insert(INSERT,'\n\\/-------------{}-------------------\\/\n{} '.format(i+1,a))
 
 					
 					i+=1
@@ -563,8 +563,7 @@ def skrinshot_s(AVTO_S=0):
 
 		spl()
 
-		root1.bind('F1',skrinshot_bid)
-
+		
 
 
 	def one(event):
@@ -618,6 +617,8 @@ def skrinshot_s(AVTO_S=0):
 
 
 	root1.unbind('F1')
+	root1.unbind('F3')
+	root1.unbind('F4')
 	STOP()
 	bat1.pack_forget()
 	frame1.pack()
@@ -756,7 +757,183 @@ def skrinshot_bid_AV(event):
 	skrinshot_bid_AVS()
 	pass
 
-#------------------------------------------#
+#------------- COMBO ORC -----------------------#9
+
+def overlay_tk(text_n,t,l,w,h):
+	global token
+	a =  requests.get('https://translate.yandex.net/api/v1.5/tr.json/translate', params={"key":token,'text':str(text_n),'format':'plain','lang':'ru'}).json()
+	if a['code'] == 200 and a !=' ':
+		root1.update()
+		windo_tk=Toplevel()
+		windo_tk.overrideredirect(1) 
+		windo_tk.geometry('{}x{}+{}+{}'.format(w,h,l,t))
+		vbat = Button(windo_tk,text = a['text'][0],command=lambda:windo_tk.destroy())
+		vbat.pack(fill=BOTH,expand=True)
+		windo_tk.wm_attributes('-topmost',1)
+
+
+def skrinshot_bid_Combo():
+	def exit_func(event=0):
+		nonlocal all_cord_mnogo
+		root1.unbind('<B1-Motion>')
+		root1.unbind('<ButtonRelease-1>')
+		root1.unbind('<F2>')
+
+
+		imags = []
+		cords = []
+		for x in all_cord_mnogo:
+
+			if x[2] == 0 and x[3] == 0:
+				continue
+
+			with mss.mss() as sct:
+				cords.append(x[0])
+				cords.append(x[1])
+				cords.append(x[2])
+				cords.append(x[3])
+				monitor = {"top":x[0], "left": x[1], "width": x[2], "height":x[3]}
+				try:
+					img = cv2.resize(numpy.array(sct.grab(monitor)),(0,0),fx=10,fy=10)
+					img = cv2.GaussianBlur(img,(11,11),0)
+					imags.append(img)
+
+				except cv2.error:
+					continue
+
+		paint.pack_forget()
+		bat1.pack()
+		root1.geometry('145x32+{}+{}'.format(location_window[0],location_window[1]))
+		root1.update()
+		root1.overrideredirect(0)
+		root1.update()
+		START()
+		lab0['width']=25
+		root1.bind('F4',skrinshot_bid)
+
+
+		i=0
+		try:
+			for y in imags:
+				a = pytesseract.image_to_string(y,lang='eng')
+				if a != '':
+					overlay_tk(a,cords[i],cords[i+1],cords[i+2],cords[i+3])
+				i+=4
+
+		except pytesseract.pytesseract.TesseractNotFoundError:
+			if 'tesseract-ocr.exe' in os.listdir():
+				os.system('tesseract-ocr.exe')
+				return
+
+			else:
+				text_box.delete(1.0, END)
+				text_box.insert(INSERT,'Для работы этой функции необходимо устоновить tesseract по ссылки\nhttps://github.com/UB-Mannheim/tesseract/wiki\nУкажите при устоновки следующий путь\nC:\\Program Files\\Tesseract-OCR')
+				return
+
+		except pytesseract.pytesseract.TesseractError:
+			text_box.delete(1.0, END)
+			text_box.insert(INSERT,'Выбраный язык не устоновлен - выберите этот язык при устоновки')
+			return
+
+
+
+	def one(event):
+
+		def paint_square(event):
+			nonlocal x,y
+			if x == 0 and y == 0:
+				x = event.x
+				y = event.y
+			else:
+				paint.delete('circle')
+				paint.create_rectangle(event.x, event.y, x, y, outline = 'blue',tag='circle')
+
+
+		if event.num == 1:
+
+			nonlocal x,y
+			nonlocal location_window
+			nonlocal all_cord_mnogo
+			#########################################
+			x0,x_max = x,event.x
+			X =  x0-x_max
+			if X < 0:
+				X *= -1
+			else:
+				x0,x_max = x_max,x0
+			#########################################
+			y0,y_max= y,event.y
+			Y =  y0-y_max
+			if Y < 0:
+				Y *= -1
+			else:
+				y0,y_max = y_max,y0
+			#########################################
+			x=y=0
+
+			if x0 == 0 and y0 == 0:
+				exit_func()
+				return
+
+
+			rrr = (y0,x0,X,Y,x_max,y_max)
+			all_cord_mnogo.append(rrr)
+			paint.create_rectangle(x_max,y_max, x0, y0, outline = 'blue',tag = str(x_max))
+
+
+
+		else:
+			paint_square(event)
+
+
+	root1.unbind('F1')
+	root1.unbind('F3')
+	root1.unbind('F4')
+
+	STOP()
+	bat1.pack_forget()
+	frame1.pack()
+	lab0.pack()
+	lab0['width']=45
+	lab0['text']='-------- [F2] --------'
+	root1.update()
+
+	with mss.mss() as sct:
+		monitor = {"top":0, "left": 0, "width": win32api.GetSystemMetrics(0), "height":win32api.GetSystemMetrics(1)}
+		mss.tools.to_png(sct.grab(monitor).rgb, sct.grab(monitor).size, output='photo_t.png')
+	lab0.pack_forget()
+	frame1.pack_forget()
+	root1.overrideredirect(1)
+
+	global imgas
+	imgas = ImageTk.PhotoImage(Image.open('photo_t.png'))
+	paint.create_image(0,0, anchor=NW,image=imgas)
+	location_window = (root1.winfo_x(),root1.winfo_y())
+	paint.pack()
+	root1.geometry('{}x{}+0+0'.format(root1.winfo_screenwidth(),root1.winfo_screenheight()))
+	root1.update()
+
+
+
+	x=y=0
+	all_cord_mnogo = []
+
+	root1.bind('<B1-Motion>',one)
+	root1.bind('<ButtonRelease-1>',one)
+	root1.bind('<F2>',exit_func)
+
+
+def skrinshot_bid_COMBO(event):
+	skrinshot_bid_Combo()
+	pass
+
+
+
+
+
+
+#------------------------------------------------#
+
 ###################################################################################################################
 
 def General_settings():
@@ -815,7 +992,7 @@ text_box1= tkinter.scrolledtext.ScrolledText(root1,width=43, height=dimensions[1
 #__________________________________________________________________________________________________________#
 frame0 = Frame(root1)
 bat_copy = Button(frame0,width=6, text='COPY', fg = Text_color,bg  = Background, command = copy)
-bat_clear = Button(frame0,width=6, text='X_X',  fg = Text_color,bg  = Background, command = clear)
+bat_clear= Button(frame0,width=6, text='X_X',  fg = Text_color,bg  = Background, command = clear)
 bat_past = Button(frame0,width=6, text='PASTE',fg = Text_color,bg  = Background, command = paste)
 #__________________________________________________________________________________________________________#
 frame1 = Frame(root1)
@@ -824,10 +1001,10 @@ radio1=Radiobutton(frame1, text='RU',selectcolor = Background, bg  = Background,
 radio2=Radiobutton(frame1, text='ENG',selectcolor = Background , bg  = Background,fg = Text_color, value='1',variable=Switches_radio, command = radio)
 #__________________________________________________________________________________________________________#
 bat_token = Button(root1,width=42, text='API Яндекс.Переводчик',fg = Text_color, bg  = Background, command = Debugging_tasks)
-bat_Spelling = Button(root1,width=42, text='\\/', fg = Text_color, bg  = Background, command = spl)
+bat_Spelling      = Button(root1,width=42, text='\\/', fg = Text_color, bg  = Background, command = spl)
 dont_bat_Spelling = Button(root1,width=42, text='/\\', fg = Text_color, bg  = Background, command = spl_dont)
 #__________________________________________________________________________________________________________#
-bat = Button(root1,width=42, text='STOP', fg = Text_color,bg  = Background, command = STOP)
+bat  = Button(root1,width=42, text='STOP', fg = Text_color,bg  = Background, command = STOP)
 bat1 = Button(root1, width=15,text='START',  command = START,bg  = Background, fg = Text_color, font = 'BOLD' )
 bat1.pack()
 #__________________________________________________________________________________________________________#
@@ -845,14 +1022,18 @@ bat_t_Sp4 = Button(frame21,width=9,text='-',fg = Text_color,bg  = Background,fon
 bat_t_Sp5 = Button(frame21,width=9,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text5)
 #__________________________________________________________________________________________________________#
 frame3 = Frame(root1)
-skrin_shot_batton   = Button(frame3, text='[F1]', width=11,bg = Background, fg = Text_color, command = skrinshot_s)
-skrin_shot_batton_AV= Button(frame3, text='[F3]', width=11,bg = Background, fg = Text_color, command = skrinshot_bid_AVS)
+skrin_shot_batton      = Button(frame3, text='[F1]', width=7,bg = Background, fg = Text_color, command = skrinshot_s)
+skrin_shot_batton_AV   = Button(frame3, text='[F3]', width=7,bg = Background, fg = Text_color, command = skrinshot_bid_AVS)
+skrin_shot_batton_COMBO= Button(frame3, text='[F4]', width=7,bg = Background, fg = Text_color, command = skrinshot_bid_Combo)
+
+
 #__________________________________________________________________________________________________________#
 paint = Canvas(root1,width=root1.winfo_screenwidth(), height=root1.winfo_screenheight())
 scale = Scale(root1, length=367,width=15,orient=HORIZONTAL,troughcolor=Background,activebackground=Background,relief=FLAT ,showvalue=0,sliderlength=52,from_=0, to=2,highlightbackground=Background,bg  = Background)
 #__________________________________________________________________________________________________________#
 root1.bind('<F1>',skrinshot_bid)
 root1.bind('<F3>',skrinshot_bid_AV)
+root1.bind('<F4>',skrinshot_bid_COMBO)
 #__________________________________________________________________________________________________________#
 START()
 root1.wm_attributes('-topmost',1)
