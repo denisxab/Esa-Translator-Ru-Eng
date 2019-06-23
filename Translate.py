@@ -350,13 +350,13 @@ def sending_text(text_sennd,NAME_TEXT):
 	# Првие. умнек как дила,          #
 	# Приве. умнек\ как дила0         #
 	# 10 # . Приве0 как дила, умнек0  #
+	# Умнек 10приве Приве. 10умнек\   #
 	###################################
 
 
 	a = text_box.get(1.0, 'end-1c')
 	cash_text = re.findall(re.compile('[A-Za-zа-яА-Я]+'), a)
 	cash_comma = re.findall(re.compile('[^A-Za-zа-яА-Я]+'), a)
-
 
 	for x in re.findall(re.compile('[A-Za-zа-яА-Я]+'), a):
 		if x == NAME_TEXT:
@@ -369,15 +369,30 @@ def sending_text(text_sennd,NAME_TEXT):
 		split_x = x.split(' ')
 		for y in split_x:
 			if y in re.findall(re.compile('[0-9]+'), x):
-				if split_x[0] != '':
-					i = cash_comma.index(x)
+
+				i = cash_comma.index(x)
+
+				try:
+					if split_x[0]!='':
+						cash_comma.pop(i)
+						cash_comma.insert(i,' {} '.format(y))
+
+					elif split_x[0]=='' and split_x[2] != '':
+						pass
+
+				except IndexError:
 					cash_comma.pop(i)
-					cash_comma.insert(i,' {} '.format(x))
+					cash_comma.insert(i,'{} '.format(y))
 
 
-	b = ' '.join(a.split(' ')[0])[0]
-	if not b in re.findall(re.compile('[A-Za-zа-яА-Я]+'), b):
+	try:
+		b = ' '.join(a.split(' ')[0])[0]
+		if not b in re.findall(re.compile('[A-Za-zа-яА-Я]+'), b):
+			cash_text.insert(0,'o')
+
+	except IndexError:
 		cash_text.insert(0,'o')
+
 	i=1
 	for x in cash_comma:
 		cash_text.insert(i,x)
