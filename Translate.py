@@ -121,17 +121,12 @@ def transelte():
 					lab0['text'] = '||| ||| ||| ||| ||| ||| ||| ||| ||| ||| |||'
 					SAVE_OZ_Text(a,resiut)
 
-			#_____________________________________________________$
-			
+			#_____________________________________________________$	
 
 		else :
 			text_box1.delete(1.0, END)
 
-
-
 		root1.after(300, transelte)
-
-
 	root1.after(1000, transelte)
 
 def radio():
@@ -232,7 +227,6 @@ def copy():
 def clear():
 	text_box.delete(1.0, END)
 	text_box1.delete(1.0, END)
-
 
 #--------------- TOKEN ---------------------#
 
@@ -483,7 +477,7 @@ def skrinshot_s(AVTO_S=0):
 			text_box1.delete(1.0, END)
 			globalF3 = all_cord_mnogo
 			Tracking_S()
-			root1.bind('F1',skrinshot_bid)
+			# root1.bind('F1',skrinshot_bid)
 			return
 
 
@@ -515,7 +509,7 @@ def skrinshot_s(AVTO_S=0):
 		lab0['width']=25
 		text_box.delete(1.0, END)
 		text_box1.delete(1.0, END)
-		root1.bind('F1',skrinshot_bid)
+		# root1.bind('F1',skrinshot_bid)
 
 
 		i=0
@@ -616,9 +610,9 @@ def skrinshot_s(AVTO_S=0):
 
 
 
-	root1.unbind('F1')
-	root1.unbind('F3')
-	root1.unbind('F4')
+	# root1.unbind('F1')
+	# root1.unbind('F3')
+	# root1.unbind('F4')
 	STOP()
 	bat1.pack_forget()
 	frame1.pack()
@@ -794,7 +788,6 @@ def overlay_tk(text_n,t,l,w,h):
 		vbat.pack(fill=BOTH,expand=True)
 		windo_tk.wm_attributes('-topmost',1)
 
-
 def skrinshot_bid_Combo():
 	def exit_func(event=0):
 		nonlocal all_cord_mnogo
@@ -832,7 +825,7 @@ def skrinshot_bid_Combo():
 		root1.update()
 		START()
 		lab0['width']=25
-		root1.bind('F4',skrinshot_bid)
+		# root1.bind('F4',skrinshot_bid)
 
 
 		i=0
@@ -909,10 +902,9 @@ def skrinshot_bid_Combo():
 			paint_square(event)
 
 
-	root1.unbind('F1')
-	root1.unbind('F3')
-	root1.unbind('F4')
-
+	# root1.unbind('F1')
+	# root1.unbind('F3')
+	# root1.unbind('F4')
 	STOP()
 	bat1.pack_forget()
 	frame1.pack()
@@ -945,15 +937,9 @@ def skrinshot_bid_Combo():
 	root1.bind('<ButtonRelease-1>',one)
 	root1.bind('<F2>',exit_func)
 
-
 def skrinshot_bid_COMBO(event):
 	skrinshot_bid_Combo()
 	pass
-
-
-
-
-
 
 #------------------------------------------------#
 
