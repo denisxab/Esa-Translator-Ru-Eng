@@ -763,11 +763,34 @@ def overlay_tk(text_n,t,l,w,h):
 	global token
 	a =  requests.get('https://translate.yandex.net/api/v1.5/tr.json/translate', params={"key":token,'text':str(text_n),'format':'plain','lang':'ru'}).json()
 	if a['code'] == 200 and a !=' ':
+
+		jk = 0
+		ok = []
+		for x in list(a['text'][0]):
+			if jk >= w:
+				ok.append('\n')
+				jk=0
+			if x == '\n':
+				ok.append(' ')
+			else:
+				jk+=10
+				ok.append(x)
+
+		hj = 0
+		for x in ok:
+			if x == '\n':
+				hj+=30
+
+
+		if h <= hj:
+			h=hj
+
+
 		root1.update()
 		windo_tk=Toplevel()
 		windo_tk.overrideredirect(1) 
 		windo_tk.geometry('{}x{}+{}+{}'.format(w,h,l,t))
-		vbat = Button(windo_tk,text = a['text'][0],command=lambda:windo_tk.destroy())
+		vbat = Button(windo_tk,text = ''.join(ok),command=lambda:windo_tk.destroy())
 		vbat.pack(fill=BOTH,expand=True)
 		windo_tk.wm_attributes('-topmost',1)
 
