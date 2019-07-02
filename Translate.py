@@ -14,20 +14,19 @@ from re import findall,compile
 import requests
 import pyperclip
 
-import win32api
-import win32gui
+if sys.platform == 'win32':
+	import win32api
+	import win32gui
+	from PIL import Image,ImageTk
+	import mss
+	import mss.tools
+	import cv2
+	import numpy
+	######################################################
+	#https://github.com/UB-Mannheim/tesseract/wiki
+	import pytesseract
+	pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe' # выбрать файл с Tesseract-OCR
 
-from PIL import Image,ImageTk
-import mss
-import mss.tools
-
-import cv2
-import numpy
-
-######################################################
-#https://github.com/UB-Mannheim/tesseract/wiki
-import pytesseract
-pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe' # выбрать файл с Tesseract-OCR
 ######################################################
 I_killed_PEP_8 = True
 ############################################################################################################
@@ -943,7 +942,11 @@ def skrinshot_bid_COMBO(event):
 
 #------------------------------------------------#
 
+
 ###################################################################################################################
+def ignorsd():
+	lab0['text'] = 'COMAND IN WINDOWS'
+	pass
 
 def General_settings():
 	try:
@@ -962,13 +965,19 @@ def General_settings():
 			Files.write('#4E51D8\n')
 			Files.write('#FFFFFF\n')
 
-			if win32api.GetSystemMetrics(1) <= 780:
+			if sys.platform == 'win32':
+				if win32api.GetSystemMetrics(1) <= 780:
+					Files.write('10\n')
+					Files.write('10\n')
+
+				elif win32api.GetSystemMetrics(1) >= 780:
+					Files.write('15\n')
+					Files.write('15\n')
+			
+			else:
 				Files.write('10\n')
 				Files.write('10\n')
 
-			elif win32api.GetSystemMetrics(1) >= 780:
-				Files.write('15\n')
-				Files.write('15\n')
 
 		General_settings()
 
@@ -1030,12 +1039,17 @@ bat_t_Sp3 = Button(frame21,width=9,text='-',fg = Text_color,bg  = Background,fon
 bat_t_Sp4 = Button(frame21,width=9,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text4)
 bat_t_Sp5 = Button(frame21,width=9,text='-',fg = Text_color,bg  = Background,font = ( "Helvetica" , 8),command=input_text5)
 #__________________________________________________________________________________________________________#
+
+
 frame3 = Frame(root1)
 skrin_shot_batton      = Button(frame3, text='[F1]', width=7,bg = Background, fg = Text_color, command = skrinshot_s)
 skrin_shot_batton_AV   = Button(frame3, text='[F3]', width=7,bg = Background, fg = Text_color, command = skrinshot_bid_AVS)
 skrin_shot_batton_COMBO= Button(frame3, text='[F4]', width=7,bg = Background, fg = Text_color, command = skrinshot_bid_Combo)
 
-
+if sys.platform != 'win32':
+	skrin_shot_batton['command'] = ignorsd
+	skrin_shot_batton_AV['command'] = ignorsd
+	skrin_shot_batton_COMBO['command'] = ignorsd
 #__________________________________________________________________________________________________________#
 paint = Canvas(root1,width=root1.winfo_screenwidth(), height=root1.winfo_screenheight())
 scale = Scale(root1, length=367,width=15,orient=HORIZONTAL,troughcolor=Background,activebackground=Background,relief=FLAT ,showvalue=0,sliderlength=52,from_=0, to=2,highlightbackground=Background,bg  = Background)

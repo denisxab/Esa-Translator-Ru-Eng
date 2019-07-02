@@ -59,15 +59,39 @@ def check_lib_win32():
                 if 'tesseract-ocr.exe' in os.listdir():
                     os.system('tesseract-ocr.exe')
 
+
+
+def check_lib_win32_lin():
+
+    if not 'General_settings.txt' in os.listdir():
+
+        a = input('Похоже вы запустили программу впервый раз, хотите установить все необходимые бибилиотеки для работы программы?[+\\-]\
+            \nIt looks like you ran the program the first time want to install all the required libraries for the program?[+\\-] ')
+        
+        os.system('sudo apt install python-pip')
+        if a == '+':
+            os.system('python -m pip install --upgrade pip')
+            try:
+                import requests
+            except:
+                os.system('pip3 install requests')
+            try:
+                import pyperclip
+            except:
+                os.system('pip3 install pyperclip')
+
+
+
+
 def mainCL():
     if sys.platform == 'win32':
         check_lib_win32()
 
-    # elif sys.platform == 'linux':
-    #   check_lib_win32()
+    elif sys.platform == 'linux':
+        check_lib_win32_lin()
 
-    # elif sys.platform == 'darwin':
-    #   check_lib_win32()
+    elif sys.platform == 'darwin':
+      check_lib_win32()
 
 
 if __name__ == '__main__':
