@@ -1,0 +1,4 @@
+sudo apt-get install python3-pip
+sudo apt-get install python3-tk
+pyperclip=1.7.0
+pypiwin32>=223

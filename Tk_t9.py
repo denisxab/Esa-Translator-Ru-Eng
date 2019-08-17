@@ -12,15 +12,14 @@ from functools import partial
 import requests
 
 
-
-class Text_T9:
+class Text_T9:  
     """""
     import Tk_t9
     T9 = Tk_t9.Text_T9(tkinter.Tk, tkinter.Text,'ru')
     T9.pack()
     # T9.pack_forget()
     """
-    if not 'Data' in os.listdir():
+    if not 'Data' in os.listdir(os.getcwd()):
         os.makedirs('Data')
 
     def __init__(self: None, master: tkinter.Tk, Text_it: None, Lang: str, bg_root='#9AB85A', bg='#74A889', fg='#000',):
@@ -200,7 +199,6 @@ class Text_T9:
         """
 
         Text_gt = self.Text_set.get(1.0, 'end-1c').split(' ')
-
         if Text_gt != ['']:
             self.Auxiliary(Text_gt)
 
@@ -267,22 +265,23 @@ def Save_load_Right(reg: str, Right_words: dict):
     0) json
     1) self.Right_words
     """
+    name = 'Data/Right_words.json'# linix
     if reg == 'r':
         try:
-            with open('Data\\Right_words.json', 'r', encoding='utf-8') as JSR:
+            with open(name, 'r', encoding='utf-8') as JSR:
                 Right = json.load(JSR)
         except FileNotFoundError:
-            with open('Data\\Right_words.json', 'w', encoding='utf-8') as JSW:
+            with open(name, 'w', encoding='utf-8') as JSW:
                 json.dump({}, JSW, sort_keys=False,
                           ensure_ascii=False)
-            with open('Data\\Right_words.json', 'r', encoding='utf-8') as JSR:
+            with open(name, 'r', encoding='utf-8') as JSR:
                 Right = json.load(JSR)
         return Right
 
-    with open('Data\\Right_words.json', 'r', encoding='utf-8') as JSR:
+    with open(name, 'r', encoding='utf-8') as JSR:
         Right = json.load(JSR)
         Right.update(Right_words)
-    with open('Data\\Right_words.json', 'w', encoding='utf-8') as JSW:
+    with open(name, 'w', encoding='utf-8') as JSW:
         json.dump(Right, JSW, sort_keys=False, ensure_ascii=False)
 
     return True
